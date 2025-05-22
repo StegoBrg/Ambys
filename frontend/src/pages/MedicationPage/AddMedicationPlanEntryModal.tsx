@@ -158,9 +158,14 @@ function AddMedicationPlanEntryModal(props: Props) {
             onChange={(e) => {
               if (e) {
                 // Get medication name from the selected value
-                const name = e.match(/^(.*)\s\(\d.*\)$/)?.[1];
+                const matches = e.match(/^(.*)\s\((.*)\)$/);
+                if (!matches) return;
+                const name = matches[1];
+                const strength = matches[2];
                 setMedication(
-                  props.medicationList.find((med) => med.name === name) ?? null
+                  props.medicationList.find(
+                    (med) => med.name === name && med.strength === strength
+                  ) ?? null
                 );
               }
             }}
