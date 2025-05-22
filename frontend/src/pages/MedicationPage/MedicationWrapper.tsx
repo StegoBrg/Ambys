@@ -9,7 +9,7 @@ function MedicationWrapper() {
 
   return (
     <>
-      <Tabs defaultValue='medicationCalendar'>
+      <Tabs defaultValue='medicationCalendar' keepMounted={false}>
         <Center>
           <Tabs.List m={20}>
             <Tabs.Tab value='medicationCalendar'>
