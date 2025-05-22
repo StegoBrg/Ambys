@@ -61,8 +61,7 @@ namespace HealthJournal_API.Repository.Services
                 case MedicationScheduleType.EveryXDays:
                     return (date.DayNumber - entry.StartDate.DayNumber) % schedule.IntervalDays == 0;
                 case MedicationScheduleType.EveryXWeeks:
-                    var weekInterval = (date.DayNumber - entry.StartDate.DayNumber) / 7;
-                    return weekInterval > 0 && weekInterval % schedule.IntervalWeeks == 0;
+                    return (date.DayNumber - entry.StartDate.DayNumber) % (schedule.IntervalWeeks * 7) == 0;
                 default:
                     return false;
             }
