@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@docusaurus/tsconfig": "^3.7.0"
+  }
+}

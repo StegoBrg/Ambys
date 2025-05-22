@@ -1,0 +1,357 @@
+{
+  "general": {
+    "inDevelopmentNotice": "Dieser Teil der Webanwendung befindet sich noch in der Entwicklung!"
+  },
+
+  "days": {
+    "monday": "Montag",
+    "tuesday": "Dienstag",
+    "wednesday": "Mittwoch",
+    "thursday": "Donnerstag",
+    "friday": "Freitag",
+    "saturday": "Samstag",
+    "sunday": "Sonntag"
+  },
+
+  "homepage": {
+    "medicationTitle": "Heutige Medikamente"
+  },
+
+  "auth": {
+    "register": {
+      "title": "Account erstellen",
+      "alreadyHaveAccount": "Hast du bereits einen Account?",
+      "loginRedirect": "Stattdessen einloggen",
+      "username": "Benutzername",
+      "usernamePlaceholder": "Benutzername eingeben",
+      "password": "Passwort",
+      "passwordPlaceholder": "Passwort eingeben",
+      "confirmPassword": "Passwort bestätigen",
+      "confirmPasswordPlaceholder": "Passwort bestätigen",
+      "passwordRequirements": {
+        "minLength": "Mindestlänge: 8 Zeichen",
+        "uppercase": "Mindestens ein Großbuchstabe",
+        "lowercase": "Mindestens ein Kleinbuchstabe",
+        "number": "Mindestens eine Zahl",
+        "match": "Passwörter müssen übereinstimmen"
+      },
+      "registerButton": "Registrieren"
+    },
+    "changePw": {
+      "title": "Passwort ändern",
+      "oldPassword": "Altes Passwort",
+      "oldPasswordPlaceholder": "Gib altes Passwort ein",
+      "newPassword": "Neues Passwort",
+      "newPasswordPlaceholder": "Neues Passwort eingeben",
+      "confirmNewPassword": "Passwort bestätigen",
+      "confirmNewPasswordPlaceholder": "Passwort bestätigen",
+      "changeButton": "Passwort ändern"
+    },
+    "addAccessToken": {
+      "title": "Access Token hinzufügen",
+      "tokenName": "Token Name",
+      "tokenNamePlaceholder": "Gib den Token Namen ein",
+      "generateButton": "Token generieren",
+      "tokenDescription": "Kopiere diesen Token, um ihn in deiner Anwendung zu verwenden. Er wird nicht erneut angezeigt.",
+      "copyTokenButton": "Token kopieren",
+      "copiedTokenButton": "Kopiert!"
+    }
+  },
+
+  "user": {
+    "userProfileLink": "Benutzerprofil",
+    "adminPageLink": "Admin Seite",
+    "logoutLink": "Abmelden"
+  },
+
+  "userPage": {
+    "profilePictureUploadButton": "Hochladen",
+    "userSettings": "Benutzereinstellungen",
+    "changePassword": "Passwort ändern",
+    "personalData": "Persönliche Daten",
+    "updateUserData": "Aktualisieren",
+    "personalAccessTokens": "Personal Access Tokens",
+    "addNewToken": "Neuen Token hinzufügen",
+    "tokenCreatedAt": "Erstellt am:",
+    "deleteToken": "Löschen"
+  },
+
+  "adminPage": {
+    "table": {
+      "userID": "Benutzerkennung",
+      "username": "Benutzername",
+      "fullName": "Vollständiger Name",
+      "role": "Rolle",
+      "moreActions": "Mehr Aktionen",
+      "deleteAction": "Löschen"
+    },
+
+    "deleteUser": {
+      "title": "Benutzer löschen",
+      "modalText": "Du bist dabei den Benutzer mit dem Namen \"{{userName}}\" zu löschen. Alle Daten die zu diesem Nutzer gehören werden auch gelöscht. Dies kann nicht rückgängig gemacht werden. Fahre nur fort, wenn du zu 100% sicher bist, dass du den Benutzer löschen willst!",
+      "deletionButtonCounter": "Löschbar in ",
+      "deletionButtonFinal": "Dauerhaft löschen",
+      "cancelButton": "Abbrechen"
+    },
+
+    "resetPw": {
+      "title": "Password zurücksetzen",
+      "userAlert": "Wähle ein neues Password aus für den Benutzer"
+    }
+  },
+
+  "sidebar": {
+    "title": "Navigation",
+    "home": "Home",
+    "diary": "Tagebuch",
+    "calendar": "Kalender",
+    "notebooks": "Notizbücher",
+    "medications": "Medikamente",
+    "settings": "Einstellungen"
+  },
+
+  "diaryPage": {
+    "dataLoading": "Daten werden geladen...",
+    "exportCsvTooltip": "Als csv exportieren",
+    "diaryEntry": {
+      "saveToast": {
+        "successTitle": "Erfolgreich gespeichert",
+        "successDescription": "Neuer Eintrag wurde erstellt.",
+        "errorTitle": "Fehler beim Speichern",
+        "errorDescription": "Eintrag konnte nicht gespeichert werden."
+      },
+      "editToast": {
+        "successTitle": "Erfolgreich editiert",
+        "successDescription": "Eintrag wurde geändert.",
+        "errorTitle": "Fehler beim Editieren",
+        "errorDescription": "Eintrag konnte nicht editiert werden."
+      },
+      "deleteToast": {
+        "successTitle": "Erfolgreich gelöscht",
+        "successDescription": "Eintrag wurde gelöscht."
+      },
+      "deleteConfirmationModal": {
+        "modalTitle": "Löschen bestätigen",
+        "modalText": "Willst du wirklich den Eintrag mit dem Datum \"{{date}}\" löschen?",
+        "deleteButton": "Dauerhaft löschen",
+        "cancelButton": "Abbrechen"
+      },
+      "saveButton": "Speichern",
+      "cancelButton": "Abbrechen",
+
+      "dates": {
+        "format": "DD.MM.YYYY",
+        "dayjsLocale": "de"
+      },
+
+      "unsavedChanges": "Ungespeicherte Änderungen"
+    }
+  },
+
+  "calendarPage": {
+    "detailView": {
+      "viewEdit": "Ansehen / Editieren",
+      "add": "Hinzufügen"
+    },
+
+    "colorCodeFilter": {
+      "tooltip": "Farblich hervorheben",
+      "modal": {
+        "groupName": "Gruppe",
+        "tColElement": "Element",
+        "tColOperator": "Operator",
+        "tColValue": "Wert",
+        "tElementAttributeDivider": "Attribute",
+        "tOperatorGeneralDivider": "Allgemein",
+        "tOperatorNumberDivider": "Nummer",
+        "tOperatorTextDivider": "Text",
+        "logicalConnectiveSelect": "Logische Verknüpfung",
+        "colorInputLabel": "Farbe auswählen",
+        "save": "Speichern",
+        "addGroup": "Neue Gruppe hinzufügen",
+        "reset": "Reset"
+      }
+    }
+  },
+
+  "notebooksPage": {
+    "addModal": {
+      "modalTitle": "Seite oder Notizbuch hinzufügen",
+      "notebook": "Notizbuch",
+      "page": "Seite",
+      "selectElementLabel": "Wähle Element zum Hinzufügen aus",
+      "nameLabel": "Name",
+      "namePlaceholder": "Namen eingeben",
+      "subpageOf": "Unterseite von",
+      "addButton": "Hinzufügen",
+
+      "addErrorTitlePage": "Ein Fehler ist beim Hinzufügen der Seite aufgetreten",
+      "addErrorTitleNotebook": "Ein Fehler ist beim Hinzufügen des Notizbuches aufgetreten"
+    },
+
+    "contextMenu": {
+      "addPage": "Seite hinzufügen",
+      "addSubpage": "Unterseite hinzufügen",
+      "delete": "Löschen"
+    },
+
+    "deleteConfirmationModal": {
+      "modalTitle": "Löschen bestätigen",
+      "modalText": "Willst du wirklich {{element}} \"{{name}}\" löschen? Alle untergeordneten Seiten werden auch gelöscht.",
+      "deleteButton": "Dauerhaft löschen",
+      "cancelButton": "Abbrechen"
+    },
+
+    "shared": "Öffentlich"
+  },
+
+  "medicationsPage": {
+    "wrapper": {
+      "plan": "Plan",
+      "medicationList": "Alle Medikamente",
+      "calendar": "Kalender"
+    },
+
+    "medicationPlan": {
+      "accordionCurrent": "Aktuell",
+      "accordionPast": "Historie",
+
+      "startDate": "Anfangsdatum",
+      "endDate": "Enddatum",
+      "medication": "Medikament",
+      "dosage": "Dosierung",
+      "type": "Typ",
+      "timesOfDay": "Tageszeiten",
+      "daysOfWeek": "Wochentage",
+      "everyXDays": "Alle X Tage",
+      "everyXWeeks": "Alle X Wochen",
+      "notes": "Notizen",
+      "stoppedReason": "Grund fürs Absetzen",
+
+      "addModal": {
+        "title": "Eintrag hinzufügen",
+        "dosagePlaceholder": "z.B. 1 Tablette",
+        "asNeeded": "Bedarfsmedikament",
+        "timesOfDayLabel": "Tageszeiten (Liste im 24h Format, getrennt durch Kommas)",
+        "timesOfDayError": "ungültiges Zeitformat. Verwende das 24h Format, getrennt durch Kommas, ohne Leerzeichen (z.B. 08:00,18:00)",
+        "customDays": "Benutzerdefinierte Tage",
+        "everyXDays": "Alle X Tage (Zählung beginnt am Startdatum)",
+        "everyXWeeks": "Alle X Wochen (Wochentag wird durch Startdatum bestimmt)",
+        "addButton": "Hinzufügen",
+        "cancelButton": "Abbrechen",
+
+        "types": {
+          "daily": "Täglich",
+          "customDays": "BenutzerdefinierteTage",
+          "everyXDays": "AlleXTage",
+          "everyXWeeks": "AlleXWochen"
+        }
+      },
+
+      "editModal": {
+        "title": "Notizen bearbeiten",
+        "saveButton": "Speichern",
+        "cancelButton": "Abbrechen"
+      },
+
+      "cancelModal": {
+        "title": "Medikament absetzen",
+        "infoText": "Möchten Sie die Eingabe des Medikaments beenden? Das Enddatum ist inklusiv, d. h. die Medikation bleibt bis zum gewählten Enddatum aktiv und wird ab dem folgenden Tag in die Historie übernommen. Sie können optional einen Grund für das Absetzen der Medikation angeben.",
+        "reason": "Grund",
+        "stopButton": "Medikament absetzen",
+        "cancelButton": "Abbrechen"
+      },
+
+      "deleteModal": {
+        "contextMenuTitle": "Eintrag löschen",
+        "title": "Eintrag löschen",
+        "warningText": "Wollen Sie den Eintrag im Medikationsplan wirklich löschen? Das sollten Sie nur tun, wenn der Eintrag völlig falsch ist oder versehentlich erstellt wurde. Wenn Sie einen Eintrag bearbeiten möchten oder die Medikamente nicht mehr einnehmen müssen, setzen Sie das Medikament stattdessen ab, um eine Historie zu erhalten.",
+        "deleteButton": "Dauerhaft löschen",
+        "cancelButton": "Abbrechen"
+      }
+    },
+
+    "medicationList": {
+      "name": "Name",
+      "desc": "Beschreibung",
+      "strength": "Stärke",
+      "type": "Typ",
+
+      "detailModal": {
+        "addTitle": "Medikament hinzufügen",
+        "editTitle": "Medikament bearbeiten",
+        "nameLabel": "Name",
+        "namePlaceholder": "Namen eingeben",
+        "descLabel": "Beschreibung",
+        "descPlaceholder": "Optionale Beschreibung des Medikaments",
+        "strengthLabel": "Stärke",
+        "strengthDesc": "Wenn du das gleiche Medikament mit unterschiedlichen Stärken hast, ist es am besten, es als anderes Medikament hinzuzufügen.",
+        "strengthPlaceholder": "z.B. \"500 mg\"",
+        "typeLabel": "Typ",
+        "typePlaceholder": "Optionaler Typ (z.B. \"Tablette\")",
+        "addButton": "Hinzufügen",
+        "editButton": "Speichern",
+        "cancelButton": "Abbrechen"
+      },
+
+      "deleteModal": {
+        "contextMenuTitle": "Medikament löschen",
+        "modalTitle": "Löschen bestätigen",
+        "modalText": "Willst du wirklich das Medikament \"{{medicationName}}\" löschen? Diese Aktion kann nicht rückgängig gemacht werden. Wenn das Medikament in Medikamentenplänen verwendet wird, kannst du es nicht löschen.",
+        "deleteButton": "Dauerhaft löschen",
+        "cancelButton": "Abbrechen"
+      }
+    }
+  },
+
+  "settingsPage": {
+    "title": "Einstellungen",
+    "language": {
+      "title": "Sprache",
+      "description": "Attribute werden nicht übersetzt."
+    },
+    "save": "Speichern",
+
+    "noteAttributes": {
+      "renameTitle": "Neuer Name",
+      "renamePlaceholder": "Name",
+      "renameButton": "Umbenennen",
+      "deletionDialogTitle": "Löschen bestätigen",
+      "deletionAlertTitle": "Achtung!",
+      "deletionAlertText": "Du bist dabei das Attribut mit dem Namen \"{{attributeName}}\" zu löschen. Wenn du dieses Attribut in Tagebucheinträgen genutzt hast, wird dieses aus allen Einträgen gelöscht. Fahre nur fort, wenn du zu 100% sicher bist, dass du das Attribut löschen willst!",
+      "deletionButtonCounter": "Löschbar in ",
+      "deletionButtonFinal": "Dauerhaft löschen",
+      "Cancel": "Abbrechen"
+    },
+
+    "addNoteAttributeModal": {
+      "modalTitle": "Attribut hinzufügen",
+      "nameTextfield": "Attribut Name",
+      "elementTextfield": "Element Typ",
+      "preview": "Vorschau",
+      "save": "Speichern",
+      "saveToast": {
+        "errorTitle": "Fehler beim Speichern",
+        "errorDescription": "Fehler während der Speicherung: ",
+        "errorDescriptionEmpty": "Attribut Name und Element Typ dürfen nicht leer sein!"
+      }
+    },
+
+    "noteConfig": {
+      "save": "Speichern",
+      "preview": "Vorschau",
+      "saveToast": {
+        "successTitle": "Erfolg",
+        "successDescription": "Konfiguration wurde erfolgreich gespeichert.",
+        "errorTitle": "Fehler beim Speichern",
+        "errorDescription": "Konfiguration konnte nicht gespeichert werden."
+      }
+    },
+
+    "categories": {
+      "general": "Allgemeine Einstellungen",
+      "noteAttributes": "Attribute verwalten",
+      "noteConfig": "Notizkonfiguration ändern"
+    }
+  }
+}

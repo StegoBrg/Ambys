@@ -1,0 +1,357 @@
+{
+  "general": {
+    "inDevelopmentNotice": "This part of the web application is still in development!"
+  },
+
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+
+  "homepage": {
+    "medicationTitle": "Today's medication"
+  },
+
+  "auth": {
+    "register": {
+      "title": "Create Account",
+      "alreadyHaveAccount": "Already have an account?",
+      "loginRedirect": "Login instead",
+      "username": "Username",
+      "usernamePlaceholder": "Enter username",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "confirmPassword": "Confirm Password",
+      "confirmPasswordPlaceholder": "Confirm password",
+      "passwordRequirements": {
+        "minLength": "Minimum length: 8 characters",
+        "uppercase": "At least one uppercase letter",
+        "lowercase": "At least one lowercase letter",
+        "number": "At least one number",
+        "match": "Passwords must match"
+      },
+      "registerButton": "Register"
+    },
+    "changePw": {
+      "title": "Change Password",
+      "oldPassword": "Old Password",
+      "oldPasswordPlaceholder": "Enter old password",
+      "newPassword": "New Password",
+      "newPasswordPlaceholder": "Enter new password",
+      "confirmNewPassword": "Confirm New Password",
+      "confirmNewPasswordPlaceholder": "Confirm new password",
+      "changeButton": "Change Password"
+    },
+    "addAccessToken": {
+      "title": "Add Access Token",
+      "tokenName": "Token Name",
+      "tokenNamePlaceholder": "Enter token name",
+      "generateButton": "Generate Token",
+      "tokenDescription": "Copy this token to use it in your application. It will not be shown again.",
+      "copyTokenButton": "Copy Token",
+      "copiedTokenButton": "Copied!"
+    }
+  },
+
+  "user": {
+    "userProfileLink": "User Profile",
+    "adminPageLink": "Admin Page",
+    "logoutLink": "Logout"
+  },
+
+  "userPage": {
+    "profilePictureUploadButton": "Upload",
+    "userSettings": "User Settings",
+    "changePassword": "Change Password",
+    "personalData": "Personal Data",
+    "updateUserData": "Update",
+    "personalAccessTokens": "Personal Access Tokens",
+    "addNewToken": "Add new Token",
+    "tokenCreatedAt": "Created at:",
+    "deleteToken": "Delete"
+  },
+
+  "adminPage": {
+    "table": {
+      "userID": "UserId",
+      "username": "Username",
+      "fullName": "Full Name",
+      "role": "Role",
+      "moreActions": "More Actions",
+      "deleteAction": "Delete"
+    },
+
+    "deleteUser": {
+      "title": "Delete User",
+      "modalText": "You are about to delete the user with the username \"{{userName}}\". All data related to this user will also be deleted. This action cannot be undone. Only proceed if you are 100% sure you want to delete this user!",
+      "deletionButtonCounter": "Deletable in ",
+      "deletionButtonFinal": "Delete forever",
+      "cancelButton": "Cancel"
+    },
+
+    "resetPw": {
+      "title": "Reset Password",
+      "userAlert": "Choose a new password for the user"
+    }
+  },
+
+  "sidebar": {
+    "title": "Navigation",
+    "home": "Home",
+    "diary": "Diary",
+    "calendar": "Calendar",
+    "notebooks": "Notebooks",
+    "medications": "Medications",
+    "settings": "Settings"
+  },
+
+  "diaryPage": {
+    "dataLoading": "Data is loading...",
+    "exportCsvTooltip": "Export as csv",
+    "diaryEntry": {
+      "saveToast": {
+        "successTitle": "Successfully saved",
+        "successDescription": "New entry has been created.",
+        "errorTitle": "Save error",
+        "errorDescription": "Entry could not be saved."
+      },
+      "editToast": {
+        "successTitle": "Successfully edited",
+        "successDescription": "Entry has been edited.",
+        "errorTitle": "Edit error",
+        "errorDescription": "Entry could not be edited."
+      },
+      "deleteToast": {
+        "successTitle": "Successfully deleted",
+        "successDescription": "Entry has been deleted."
+      },
+      "deleteConfirmationModal": {
+        "modalTitle": "Confirm deletion",
+        "modalText": "Do you really want to delete the entry with the date: \"{{date}}\"?",
+        "deleteButton": "Delete forever",
+        "cancelButton": "Cancel"
+      },
+      "saveButton": "Save",
+      "cancelButton": "Cancel",
+
+      "dates": {
+        "format": "MM/DD/YYYY",
+        "dayjsLocale": "en"
+      },
+
+      "unsavedChanges": "Unsaved Changes"
+    }
+  },
+
+  "calendarPage": {
+    "detailView": {
+      "viewEdit": "View / Edit",
+      "add": "Add"
+    },
+
+    "colorCodeFilter": {
+      "tooltip": "Color Highlight",
+      "modal": {
+        "groupName": "Group",
+        "tColElement": "Element",
+        "tColOperator": "Operator",
+        "tColValue": "Value",
+        "tElementAttributeDivider": "Attributes",
+        "tOperatorGeneralDivider": "General",
+        "tOperatorNumberDivider": "Number",
+        "tOperatorTextDivider": "Text",
+        "logicalConnectiveSelect": "Logical connective",
+        "colorInputLabel": "Select color",
+        "save": "Save",
+        "addGroup": "Add new group",
+        "reset": "Reset"
+      }
+    }
+  },
+
+  "notebooksPage": {
+    "addModal": {
+      "modalTitle": "Add Notebook or Page",
+      "notebook": "Notebook",
+      "page": "Page",
+      "selectElementLabel": "Select Element to Add",
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter name",
+      "subpageOf": "Subpage of",
+      "addButton": "Add",
+
+      "addErrorTitlePage": "An error occured while trying to add page",
+      "addErrorTitleNotebook": "An error occured while trying to add notebook"
+    },
+
+    "contextMenu": {
+      "addPage": "Add page",
+      "addSubpage": "Add subpage",
+      "delete": "Delete"
+    },
+
+    "deleteConfirmationModal": {
+      "modalTitle": "Delete confirmation",
+      "modalText": "Do you really want to delete the {{element}} \"{{name}}\"? This will also delete all underlying pages.",
+      "deleteButton": "Delete forever",
+      "cancelButton": "Cancel"
+    },
+
+    "shared": "Shared"
+  },
+
+  "medicationsPage": {
+    "wrapper": {
+      "plan": "Plan",
+      "medicationList": "All medications",
+      "calendar": "Calendar"
+    },
+
+    "medicationPlan": {
+      "accordionCurrent": "Current",
+      "accordionPast": "Past",
+
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "medication": "Medication",
+      "dosage": "Dosage",
+      "type": "Type",
+      "timesOfDay": "Times Of Day",
+      "daysOfWeek": "Days Of Week",
+      "everyXDays": "Every X Days",
+      "everyXWeeks": "Every X Weeks",
+      "notes": "Notes",
+      "stoppedReason": "Stopped Reason",
+
+      "addModal": {
+        "title": "Add Entry",
+        "dosagePlaceholder": "e.g. 1 Pill",
+        "asNeeded": "As Needed",
+        "timesOfDayLabel": "Times of day (List in 24h format, separated by commas)",
+        "timesOfDayError": "Invalid time format. Use 24h format, separated by comma, no whitespace (e.g. 08:00,18:00)",
+        "customDays": "Select custom days",
+        "everyXDays": "Every X Days (counting starts at start date)",
+        "everyXWeeks": "Every X Weeks (weekday will be determined by start date)",
+        "addButton": "Add",
+        "cancelButton": "Cancel",
+
+        "types": {
+          "daily": "Daily",
+          "customDays": "CustomDays",
+          "everyXDays": "EveryXDays",
+          "everyXWeeks": "EveryXWeeks"
+        }
+      },
+
+      "editModal": {
+        "title": "Edit Notes",
+        "saveButton": "Save",
+        "cancelButton": "Cancel"
+      },
+
+      "cancelModal": {
+        "title": "Stop Medication",
+        "infoText": "Do you want to stop the medication plan entry? The end date is inclusive, meaning the medication will remain active through the selected end date and will move to the history starting the following day. You can optionally add a reason for stopping the medication.",
+        "reason": "Reason",
+        "stopButton": "Stop Medication",
+        "cancelButton": "Cancel"
+      },
+
+      "deleteModal": {
+        "contextMenuTitle": "Delete Entry",
+        "title": "Delete Entry",
+        "warningText": "Do you really want to delete the medication plan entry? This should only be done if the entry is just completely wrong or has been created on accident. If you want to edit an entry or do not need to take the medication anymore, cancel the entry instead to preserve a history.",
+        "deleteButton": "Delete forever",
+        "cancelButton": "Cancel"
+      }
+    },
+
+    "medicationList": {
+      "name": "Name",
+      "desc": "Description",
+      "strength": "Strength",
+      "type": "Type",
+
+      "detailModal": {
+        "addTitle": "Add Medication",
+        "editTitle": "Edit Medication",
+        "nameLabel": "Name",
+        "namePlaceholder": "Enter name of the medication",
+        "descLabel": "Description",
+        "descPlaceholder": "Optional description of the medication",
+        "strengthLabel": "Strength",
+        "strengthDesc": "If you have the same medication with different strenghts, it is best to add it as another medication.",
+        "strengthPlaceholder": "e.g. \"500 mg\"",
+        "typeLabel": "Type",
+        "typePlaceholder": "Optional type (e.g. \"Pill\")",
+        "addButton": "Add",
+        "editButton": "Edit",
+        "cancelButton": "Cancel"
+      },
+
+      "deleteModal": {
+        "contextMenuTitle": "Delete Medication",
+        "modalTitle": "Delete confirmation",
+        "modalText": "Do you really want to delete the medication \"{{medicationName}}\"? This action cannot be undone. You cannot delete a medication that is still used in a medication plan entry (current or past).",
+        "deleteButton": "Delete forever",
+        "cancelButton": "Cancel"
+      }
+    }
+  },
+
+  "settingsPage": {
+    "title": "Settings",
+    "language": {
+      "title": "Language",
+      "description": "This will not affect your note attributes."
+    },
+    "save": "Save",
+
+    "noteAttributes": {
+      "renameTitle": "New Name",
+      "renamePlaceholder": "Name",
+      "renameButton": "Rename",
+      "deletionDialogTitle": "Confirm deletion",
+      "deletionAlertTitle": "Be careful!",
+      "deletionAlertText": "You are about to delete the attribute with the name \"{{attributeName}}\". If you have used this attribute in any notes, deleting it will remove it from all notes. Only proceed if you are 100% sure you want to delete this attribute!",
+      "deletionButtonCounter": "Deletable in ",
+      "deletionButtonFinal": "Delete forever",
+      "Cancel": "Cancel"
+    },
+
+    "addNoteAttributeModal": {
+      "modalTitle": "Add note attribute",
+      "nameTextfield": "Attribute name",
+      "elementTextfield": "Element type",
+      "preview": "Preview",
+      "save": "Save",
+      "saveToast": {
+        "errorTitle": "Error",
+        "errorDescription": "Error while adding attribute: ",
+        "errorDescriptionEmpty": "Attribute name and element type must not be empty!"
+      }
+    },
+
+    "noteConfig": {
+      "save": "Save",
+      "preview": "Preview",
+      "saveToast": {
+        "successTitle": "Successfully saved",
+        "successDescription": "Config saved successfully.",
+        "errorTitle": "Save error",
+        "errorDescription": "Config could not be saved."
+      }
+    },
+
+    "categories": {
+      "general": "General Settings",
+      "noteAttributes": "Configure Note Attributes",
+      "noteConfig": "Change Note Configuration"
+    }
+  }
+}

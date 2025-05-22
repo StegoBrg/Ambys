@@ -1,0 +1,9 @@
+# Ignore any env files.
+.env
+.env.*
+# Commit env template file.
+!.env.template
+
+node_modules
+
+dev-dist

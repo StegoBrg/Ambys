@@ -1,0 +1,44 @@
+﻿name: ambys
+
+services:
+  db:
+    image: ${DB_IMAGE}
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres", "-d", "healthy"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+
+  app:
+    image: ${APP_IMAGE_NAME}:${APP_IMAGE_VERSION}
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=${DB_NAME};Username=postgres;Password=${DB_PASSWORD}
+      - ConnectionStrings__AuthConnection=Host=db;Port=5432;Database=identity;Username=postgres;Password=${DB_PASSWORD}
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=http://0.0.0.0:8080
+      - Jwt__Audience=http://0.0.0.0:8080
+      - AuthSettings__DisableSignup=${DISABLE_SIGNUP}
+    ports:
+      - "${FRONTEND_PORT}:80"
+    volumes:
+      - pgbackups:/backups
+
+volumes:
+  pgdata:
+  pgbackups:

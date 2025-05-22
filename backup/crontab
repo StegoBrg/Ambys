@@ -1,0 +1,1 @@
+0 20 * * * /bin/bash /backup/pg_backup_rotated.sh
