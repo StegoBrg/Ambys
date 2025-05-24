@@ -88,10 +88,17 @@ namespace HealthJournal_API.Repository.Services
                     existingAttribute.Value = attribute.Value;
                 }
                 else
-                {
-                    // Attributes cannot be altered.
-                    // TODO: Return clear error message.
-                    return null;
+                {   
+                    // Get noteattribute from database.
+                    var noteAttribute = await dbContext.NoteAttributes.FirstOrDefaultAsync(x => x.Name == attribute.NoteAttribute.Name);
+
+                    if(noteAttribute == null) return null; // If note attribute does not exist, return null. TODO: Return clear error message.
+                    dailyNoteToUpdate.Attributes.Add(new DailyNoteAttribute
+                    {
+                        Id = 0,
+                        NoteAttribute = noteAttribute,
+                        Value = attribute.Value,
+                    });                  
                 }
             }
 
