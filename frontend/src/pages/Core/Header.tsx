@@ -118,6 +118,13 @@ function Header() {
           </Button>
           <Button
             size='md'
+            color={currPath === '/reports' ? 'blue' : 'gray'}
+            onClick={() => handleSidebarNavigate('/reports')}
+          >
+            {t('sidebar.reports')}
+          </Button>
+          <Button
+            size='md'
             color={currPath === '/settings' ? 'blue' : 'gray'}
             onClick={() => handleSidebarNavigate('/settings')}
           >

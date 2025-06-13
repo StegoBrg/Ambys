@@ -16,6 +16,7 @@ import AdminPage from '../AdminPage/AdminPage';
 import MedicationWrapper from '../MedicationPage/MedicationWrapper';
 import Homepage from '../HomePage/Homepage';
 import { NothingFoundBackground } from './ErrorPages/NotFound/NothingFoundBackground';
+import ReportsPage from '../ReportsPage/ReportsPage';
 
 function AppLayout() {
   const location = useLocation();
@@ -39,6 +40,7 @@ function AppLayout() {
               <Route path='/calendar' element={<CalendarPage />} />
               <Route path='/notebooks' element={<NotebooksPage />} />
               <Route path='/medications' element={<MedicationWrapper />} />
+              <Route path='/reports' element={<ReportsPage />} />
               <Route path='/settings' element={<SettingsPage />} />
 
               <Route path='/userprofile' element={<UserPage />} />
