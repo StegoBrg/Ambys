@@ -5,7 +5,7 @@ import {
   MedicationPlanEntry,
 } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
-import { Box, Flex, Paper, Title } from '@mantine/core';
+import { Box, Button, Flex, Paper, Title } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import {
   getAttributeAggregate,
@@ -16,7 +16,7 @@ import {
   getAttributeShowAllWithFilter,
   getAttributeSum,
 } from './VisualizationFunctions';
-import { HealthReport } from './Types';
+import { HealthReport, HealthReportStringDates } from './Types';
 import { Calendar } from '@mantine/dates';
 import { getColorCodingForDate } from '../CalendarPage/lib';
 import { getFirstDaysOfMonths } from './CalendarFunctions';
@@ -433,6 +433,32 @@ function ReportViewer(props: Props) {
           </Paper>
         </>
       )}
+
+      <Button
+        mt={20}
+        onClick={() => {
+          const healthReportStringDates: HealthReportStringDates = {
+            name: props.healthReport.name,
+            startDate: props.healthReport.startDate.toISOString().split('T')[0],
+            endDate: props.healthReport.endDate.toISOString().split('T')[0],
+            attributesVisualizations:
+              props.healthReport.attributesVisualizations,
+            colorCodeConfig: props.healthReport.colorCodeConfig,
+            includeMedicationList: props.healthReport.includeMedicationList,
+            additionalNotes: props.healthReport.additionalNotes,
+          };
+
+          console.log(healthReportStringDates);
+
+          axiosInstance
+            .post<HealthReport[]>('HealthReportConfig', healthReportStringDates)
+            .then((response) => {
+              console.log(response);
+            });
+        }}
+      >
+        Save to database
+      </Button>
     </>
   );
 }

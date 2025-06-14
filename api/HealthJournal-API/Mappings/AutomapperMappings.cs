@@ -60,6 +60,10 @@ namespace HealthJournal_API.Mappings
 
             CreateMap<HealthReportConfig, HealthReportConfigDTO>().ReverseMap();
             CreateMap<AddHealthReportConfigDTO, HealthReportConfig>().ReverseMap();
+            CreateMap<AttributeVisualization, AttributeVisualizationDTO>().ReverseMap();
+            CreateMap<ColorCodeConfiguration, ColorCodeConfigurationDTO>().ReverseMap();
+            CreateMap<DiaryFilterConfiguration, DiaryFilterConfigurationDTO>().ReverseMap();
+            CreateMap<FilterClause, FilterClauseDTO>().ReverseMap();
         }
     }
 }

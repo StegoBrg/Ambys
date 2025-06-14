@@ -83,6 +83,7 @@ builder.Services.AddScoped<IUserDataRepository, UserDataRepositoryPostgres>();
 builder.Services.AddScoped<IUserContext, UserContext>();
 builder.Services.AddScoped<IMedicationRepository, MedicationRepositoryPostgres>();
 builder.Services.AddScoped<IMedicationPlanEntryRepository, MedicationPlanEntryRepositoryPostgres>();
+builder.Services.AddScoped<IHealthReportConfigRepository, HealthReportConfigRepositoryPostgres>();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(typeof(AutomapperMappings));

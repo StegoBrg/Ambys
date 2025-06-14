@@ -53,7 +53,7 @@ namespace HealthJournal_API.Controllers
             reportConfigModel = await healthReportConfigRepository.AddHealthReportConfigAsync(reportConfigModel);
 
             var reportConfigDTO = mapper.Map<HealthReportConfigDTO>(reportConfigModel);
-            return CreatedAtAction(nameof(AddHealthReportConfigDTO), new { id = reportConfigDTO.Id }, reportConfigDTO);
+            return CreatedAtAction(nameof(AddHealthReportConfig), new { id = reportConfigDTO.Id }, reportConfigDTO);
         }
 
         [HttpDelete]

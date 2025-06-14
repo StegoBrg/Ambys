@@ -57,8 +57,6 @@ function GenerateReportModal(props: Props) {
     checkLocaleLoaded();
   }, [t]);
 
-  console.log(setLocale);
-
   const [reportName, setReportName] = useState<string>(
     'Health Report - ' + new Date().toLocaleDateString(locale)
   );
@@ -116,7 +114,7 @@ function GenerateReportModal(props: Props) {
 
   function handleSave() {
     const report: HealthReport = {
-      title: reportName,
+      name: reportName,
       startDate: startDate,
       endDate: endDate,
       attributesVisualizations: attributesVisualizations,

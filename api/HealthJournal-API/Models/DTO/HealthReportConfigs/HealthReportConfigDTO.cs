@@ -6,34 +6,34 @@
         public required string Name { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
-        public List<AttributeVisualization> AttributesVisualizations { get; set; } = new List<AttributeVisualization>();
-        public ColorCodeConfiguration? ColorCodeConfig { get; set; }
+        public List<AttributeVisualizationDTO> AttributesVisualizations { get; set; } = new List<AttributeVisualizationDTO>();
+        public List<ColorCodeConfigurationDTO> ColorCodeConfig { get; set; } = new List<ColorCodeConfigurationDTO>();
         public bool IncludeMedicationList { get; set; }
         public string? AdditionalNotes { get; set; }
     }
 
-    public class AttributeVisualization
+    public class AttributeVisualizationDTO
     {
         public required string AttributeName { get; set; }
         public VisualizationType VisualizationType { get; set; }
-        public DiaryFilterConfiguration? Filter { get; set; }
+        public DiaryFilterConfigurationDTO? Filter { get; set; }
 
     }
 
-    public class ColorCodeConfiguration
+    public class ColorCodeConfigurationDTO
     {
         public LogicGate LogicGate { get; set; }
-        public List<FilterClause> Clauses { get; set; } = new List<FilterClause>();
+        public List<FilterClauseDTO> Clauses { get; set; } = new List<FilterClauseDTO>();
         public required string ColorHex { get; set; }
     }
 
-    public class DiaryFilterConfiguration
+    public class DiaryFilterConfigurationDTO
     {
         public LogicGate LogicGate { get; set; }
-        public List<FilterClause> Clauses { get; set; } = new List<FilterClause>();
+        public List<FilterClauseDTO> Clauses { get; set; } = new List<FilterClauseDTO>();
     }
 
-    public class FilterClause
+    public class FilterClauseDTO
     {
         public required string Element { get; set; }
         public required string Operator { get; set; }

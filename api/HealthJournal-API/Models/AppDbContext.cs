@@ -43,8 +43,9 @@ namespace HealthJournal_API.Models
                     av.OwnsOne(a => a.Filter); // Filter is nullable
                 });
 
-                config.OwnsOne(h => h.ColorCodeConfig, cc =>
+                config.OwnsMany(h => h.ColorCodeConfig, cc =>
                 {
+                    cc.WithOwner();
                     cc.OwnsMany(c => c.Clauses);
                 });
             });

@@ -18,7 +18,7 @@ type AttributeVisualization = {
 };
 
 type HealthReport = {
-  title: string;
+  name: string;
   startDate: Date;
   endDate: Date;
   attributesVisualizations: AttributeVisualization[];
@@ -27,4 +27,19 @@ type HealthReport = {
   additionalNotes?: string;
 };
 
-export type { VisualizationType, AttributeVisualization, HealthReport };
+type HealthReportStringDates = {
+  name: string;
+  startDate: string;
+  endDate: string;
+  attributesVisualizations: AttributeVisualization[];
+  colorCodeConfig?: ColorCodeConfiguration;
+  includeMedicationList: boolean;
+  additionalNotes?: string;
+};
+
+export type {
+  VisualizationType,
+  AttributeVisualization,
+  HealthReport,
+  HealthReportStringDates,
+};

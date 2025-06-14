@@ -10,7 +10,7 @@ namespace HealthJournal_API.Models.Domain
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public List<AttributeVisualization> AttributesVisualizations { get; set; } = new List<AttributeVisualization>();
-        public ColorCodeConfiguration? ColorCodeConfig { get; set; }
+        public List<ColorCodeConfiguration> ColorCodeConfig { get; set; } = new List<ColorCodeConfiguration>();
         public bool IncludeMedicationList { get; set; }
         public string? AdditionalNotes { get; set; }
     }
