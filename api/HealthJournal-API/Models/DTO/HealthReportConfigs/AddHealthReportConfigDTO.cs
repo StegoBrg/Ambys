@@ -1,0 +1,14 @@
+﻿namespace HealthJournal_API.Models.DTO.HealthReportConfigs
+{
+    public class AddHealthReportConfigDTO
+    {
+        public int Id { get; set; }
+        public required string Name { get; set; }
+        public DateOnly StartDate { get; set; }
+        public DateOnly EndDate { get; set; }
+        public List<AttributeVisualization> AttributesVisualizations { get; set; } = new List<AttributeVisualization>();
+        public ColorCodeConfiguration? ColorCodeConfig { get; set; }
+        public bool IncludeMedicationList { get; set; }
+        public string? AdditionalNotes { get; set; }
+    }
+}
