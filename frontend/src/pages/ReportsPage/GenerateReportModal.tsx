@@ -13,21 +13,29 @@ import {
   Table,
   em,
   Alert,
+  Box,
+  TextInput,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import axiosInstance from '../../lib/axiosInstance';
-import { NoteAttribute } from '../../Types';
-import { AttributeVisualization, VisualizationType } from './ReportViewer';
+import { ColorCodeConfiguration, NoteAttribute } from '../../Types';
+import {
+  AttributeVisualization,
+  HealthReport,
+  VisualizationType,
+} from './Types';
 import { IoAdd } from 'react-icons/io5';
-import { TbFilter, TbX } from 'react-icons/tb';
+import { TbEdit, TbFilter, TbX } from 'react-icons/tb';
 import { useMediaQuery } from '@mantine/hooks';
 import DiaryPageFilterModal from '../DiaryPage/DiaryPageFilterModal';
+import ColorCodeModal from '../CalendarPage/ColorCodeModal';
 
 interface Props {
   opened: boolean;
   onClose: () => void;
+  onSave: (report: HealthReport) => void;
 }
 
 function GenerateReportModal(props: Props) {
@@ -48,6 +56,10 @@ function GenerateReportModal(props: Props) {
 
     checkLocaleLoaded();
   }, [t]);
+
+  const [reportName, setReportName] = useState<string>(
+    'Health Report - ' + new Date().toLocaleDateString(locale)
+  );
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
@@ -79,6 +91,15 @@ function GenerateReportModal(props: Props) {
     'showAllWithFilter',
   ];
 
+  const [calendarViewFilter, setCalendarViewFilter] =
+    useState<ColorCodeConfiguration>();
+
+  const [colorCodeModalOpen, setColorCodeModalOpen] = useState(false);
+
+  const [includeMedicationList, setIncludeMedicationList] = useState(false);
+
+  const [additionalNotes, setAdditionalNotes] = useState('');
+
   useEffect(() => {
     axiosInstance.get<NoteAttribute[]>('NoteAttributes').then((response) => {
       setAllAttributes(response.data);
@@ -86,7 +107,20 @@ function GenerateReportModal(props: Props) {
     });
   }, []);
 
-  console.log(attributesVisualizations);
+  function handleSave() {
+    const report: HealthReport = {
+      title: reportName,
+      startDate: startDate,
+      endDate: endDate,
+      attributesVisualizations: attributesVisualizations,
+      colorCodeConfig: calendarViewFilter,
+      includeMedicationList: includeMedicationList,
+      additionalNotes: additionalNotes,
+    };
+
+    props.onSave(report);
+    props.onClose();
+  }
 
   return (
     <Modal
@@ -100,6 +134,16 @@ function GenerateReportModal(props: Props) {
         List all errors here that make the report generation impossible, e.g
         missing filters or incompatible visualizationtypes
       </Alert>
+
+      <TextInput
+        value={reportName}
+        onChange={(e) => setReportName(e.target.value)}
+        label='Report Name'
+        withAsterisk
+        mt={10}
+        mb={10}
+      />
+
       <Group grow>
         <DatePickerInput
           label='Start Date'
@@ -128,9 +172,6 @@ function GenerateReportModal(props: Props) {
 
       <Stack mt={20} gap='lg'>
         <div>
-          <Title order={4}>Attributes</Title>
-          <Divider />
-
           <Table>
             <Table.Thead>
               <Table.Tr>
@@ -235,31 +276,56 @@ function GenerateReportModal(props: Props) {
         <div>
           <Title order={4}>Calendar View</Title>
           <Divider />
-          {/* Reuse color coded calendar view here */}
+
+          {calendarViewFilter && (
+            <Center m={10}>
+              <Button
+                variant='light'
+                leftSection={<TbEdit size='1.5rem' />}
+                onClick={() => setColorCodeModalOpen(true)}
+              >
+                Color Code Calendar
+              </Button>
+            </Center>
+          )}
+
+          {calendarViewFilter === undefined && (
+            <Center m={10}>
+              <ActionIcon
+                color='blue'
+                size='xl'
+                radius='xl'
+                bd='2px solid black'
+                onClick={() => {
+                  setColorCodeModalOpen(true);
+                }}
+              >
+                <IoAdd size='2rem' />
+              </ActionIcon>
+            </Center>
+          )}
         </div>
 
-        <div>
-          <Title order={4}>Pages</Title>
-          <Divider />
-          {/* Print specific notebook pages in the report */}
-        </div>
-
-        <div>
-          <Title order={4}>Medication</Title>
-          <Divider />
-          <Checkbox label={'Include Medication List'} checked={true} readOnly />
-        </div>
+        <Box mt={10}>
+          <Checkbox
+            label={'Include Medication List'}
+            checked={includeMedicationList}
+            onChange={(e) => setIncludeMedicationList(e.currentTarget.checked)}
+          />
+        </Box>
 
         <Textarea
           label='Additional Notes'
           placeholder='Enter any additional notes for the report...'
           autosize
+          value={additionalNotes}
+          onChange={(e) => setAdditionalNotes(e.currentTarget.value)}
           minRows={3}
         />
       </Stack>
 
       <Group mt={20}>
-        <Button onClick={() => {}}>Generate Report</Button>
+        <Button onClick={handleSave}>Preview Report</Button>
 
         <Button variant='outline' onClick={() => props.onClose()}>
           Cancel
@@ -309,6 +375,14 @@ function GenerateReportModal(props: Props) {
           }}
         />
       )}
+
+      <ColorCodeModal
+        opened={colorCodeModalOpen}
+        onClose={() => setColorCodeModalOpen(false)}
+        onSave={(colorCodeConfig) => setCalendarViewFilter(colorCodeConfig)}
+        onReset={() => setCalendarViewFilter(undefined)}
+        allAttributes={allAttributes}
+      />
     </Modal>
   );
 }

@@ -21,11 +21,16 @@ import {
   NoteConfiguration,
 } from '../../Types';
 import DiaryEntry from '../Shared/DiaryEntry';
-import { readLocalStorageValue, useMediaQuery } from '@mantine/hooks';
+import {
+  readLocalStorageValue,
+  useLocalStorage,
+  useMediaQuery,
+} from '@mantine/hooks';
 import { TbColorSwatch } from 'react-icons/tb';
 import ColorCodeModal from './ColorCodeModal';
 import { useTranslation } from 'react-i18next';
 import axiosInstance from '../../lib/axiosInstance';
+import { getColorCodingForDate, getDailyNoteForDate } from './lib';
 
 function CalendarPage() {
   const theme = useMantineTheme();
@@ -46,6 +51,14 @@ function CalendarPage() {
   );
 
   const [colorCodeModalOpened, setColorCodeModalOpened] = useState(false);
+
+  const [
+    colorCodeConfigStorage,
+    setColorCodeConfigStorage,
+    removeColorCodeConfigStorage,
+  ] = useLocalStorage<ColorCodeConfiguration | undefined>({
+    key: 'color-code-config',
+  });
 
   useEffect(() => {
     getData();
@@ -76,104 +89,6 @@ function CalendarPage() {
       .catch((error) => {
         console.error('Error:', error);
       });
-  }
-
-  function getDailyNoteForDate(date: Date) {
-    const offset = date.getTimezoneOffset();
-    date = new Date(date.getTime() - offset * 60 * 1000);
-
-    const formattedDate = date.toISOString().split('T')[0];
-
-    const dailyNote = dailyNotes.find((x) => x.date === formattedDate);
-
-    return dailyNote;
-  }
-
-  // Returns hex code of color according of color coding filter from localstorage.
-  // Returns undefined if no filter could be found for the given date.
-  function getColorCodingForDate(date: Date): string | undefined {
-    const dailyNote = getDailyNoteForDate(date);
-
-    const config = readLocalStorageValue<ColorCodeConfiguration | undefined>({
-      key: 'color-code-config',
-    });
-    if (config === undefined) return undefined;
-
-    for (let configGroup = 0; configGroup < config.length; configGroup++) {
-      let filterApply = false; // Tracks whether a filter from the localStorage could be applied.
-      const filterApplyClauses: boolean[] = []; // Checks if the filter applies for each clause alone. These will get combined with AND / OR setting.
-
-      for (let i = 0; i < config[configGroup].clauses.length; i++) {
-        const clause = config[configGroup].clauses[i];
-
-        filterApplyClauses[i] = false;
-
-        if (dailyNote === undefined) {
-          // Check if nonexistant dailyNote should be color coded.
-          if (
-            clause.element === 'DailyNote' &&
-            clause.operator === 'is empty'
-          ) {
-            filterApplyClauses[i] = true;
-          }
-        } else {
-          // Check all attributes of dailyNote and check if filter apply.
-          for (let j = 0; j < dailyNote.attributes.length; j++) {
-            const attribute = dailyNote.attributes[j];
-
-            if (clause.element === attribute.name) {
-              switch (clause.operator) {
-                case '=':
-                  if (attribute.value === clause.value)
-                    filterApplyClauses[i] = true;
-                  break;
-                case '<':
-                  if (+attribute.value < +clause.value)
-                    filterApplyClauses[i] = true;
-                  break;
-                case '<=':
-                  if (+attribute.value <= +clause.value)
-                    filterApplyClauses[i] = true;
-                  break;
-                case '>':
-                  if (+attribute.value > +clause.value)
-                    filterApplyClauses[i] = true;
-                  break;
-                case '>=':
-                  if (+attribute.value >= +clause.value)
-                    filterApplyClauses[i] = true;
-                  break;
-                case 'contains':
-                  if (attribute.value.includes(clause.value))
-                    filterApplyClauses[i] = true;
-                  break;
-                case 'is empty':
-                  if (attribute.value === '') filterApplyClauses[i] = true;
-                  break;
-              }
-            }
-          }
-        }
-      }
-
-      // Check if all inner clauses fit together regarding logic gate.
-      const logicGate = config[configGroup].logicGate;
-
-      if (logicGate === 'AND') {
-        filterApply = filterApplyClauses.every(Boolean);
-      } else if (logicGate === 'OR') {
-        filterApply = filterApplyClauses.some(Boolean);
-      } else if (logicGate === 'XOR') {
-        filterApply = filterApplyClauses.filter(Boolean).length === 1;
-      }
-
-      if (filterApply) {
-        return config[configGroup].colorHex;
-      }
-    }
-
-    // Return undefined if no color code filter could be applied.
-    return undefined;
   }
 
   return (
@@ -212,7 +127,7 @@ function CalendarPage() {
               getDayProps={(date) => ({
                 onClick: () => {
                   setDailyNoteDetailOpened(true);
-                  setDailyNoteDetail(getDailyNoteForDate(date));
+                  setDailyNoteDetail(getDailyNoteForDate(date, dailyNotes));
                   setDailyNoteDetailDate(date);
                 },
               })}
@@ -221,7 +136,15 @@ function CalendarPage() {
                 const day = date.getDate();
 
                 return (
-                  <Box fz='1.2rem' fw='bolder' c={getColorCodingForDate(date)}>
+                  <Box
+                    fz='1.2rem'
+                    fw='bolder'
+                    c={getColorCodingForDate(
+                      date,
+                      colorCodeConfigStorage,
+                      dailyNotes
+                    )}
+                  >
                     {day}
                   </Box>
                 );
@@ -235,7 +158,14 @@ function CalendarPage() {
         <ColorCodeModal
           opened={colorCodeModalOpened}
           onClose={() => setColorCodeModalOpened(false)}
-          noteConfig={noteConfig}
+          onSave={(config) => {
+            setColorCodeConfigStorage(config);
+          }}
+          onReset={() => {
+            removeColorCodeConfigStorage();
+          }}
+          colorCodeConfig={colorCodeConfigStorage}
+          allAttributes={allAttributes}
         />
       )}
 

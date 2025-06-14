@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
-import { DailyNote, DiaryFilterConfiguration } from '../../Types';
+import {
+  DailyNote,
+  DiaryFilterConfiguration,
+  MedicationPlanEntry,
+} from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
-import { Box } from '@mantine/core';
+import { Box, Flex, Paper, Title } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
-
 import {
   getAttributeAggregate,
   getAttributeAverage,
@@ -13,32 +16,43 @@ import {
   getAttributeShowAllWithFilter,
   getAttributeSum,
 } from './VisualizationFunctions';
+import { HealthReport } from './Types';
+import { Calendar } from '@mantine/dates';
+import { getColorCodingForDate } from '../CalendarPage/lib';
+import { getFirstDaysOfMonths } from './CalendarFunctions';
+import ColorLegend from './ColorLegend';
+import { DataTable } from 'mantine-datatable';
+import { useTranslation } from 'react-i18next';
 
-type VisualizationType =
-  | 'sum'
-  | 'min'
-  | 'max'
-  | 'average'
-  | 'aggregate'
-  | 'lineChart'
-  | 'showAll'
-  | 'showAllWithFilter'
-  | '';
+interface Props {
+  healthReport: HealthReport;
+}
 
-type AttributeVisualization = {
-  attributeName: string;
-  visualizationType: VisualizationType;
-  filter?: DiaryFilterConfiguration;
-};
+function ReportViewer(props: Props) {
+  const { t } = useTranslation();
+  const [locale, setLocale] = useState('en');
 
-function ReportViewer() {
-  const oneMonthAgo = new Date();
-  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  // Update locale if string is loaded from i18next.
+  useEffect(() => {
+    const checkLocaleLoaded = () => {
+      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
+      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
+        setLocale(loadedLocale);
+      } else {
+        setLocale('en');
+      }
+    };
 
-  const [startDate] = useState<Date>(oneMonthAgo);
-  const [endDate] = useState<Date>(new Date());
+    checkLocaleLoaded();
+  }, [t]);
+  const [startDate] = useState<Date>(props.healthReport.startDate);
+  const [endDate] = useState<Date>(props.healthReport.endDate);
 
   const [dailyNotes, setDailyNotes] = useState<DailyNote[]>([]);
+
+  const [medicationPlanEntries, setMedicationPlanEntries] = useState<
+    MedicationPlanEntry[]
+  >([]);
 
   useEffect(() => {
     axiosInstance
@@ -52,71 +66,29 @@ function ReportViewer() {
       });
   }, [endDate, startDate]);
 
-  const testFilterConfig: DiaryFilterConfiguration = {
-    logicGate: 'AND',
-    clauses: [
-      {
-        element: 'Wellbeing',
-        operator: '>',
-        value: '8',
-      },
-      {
-        element: 'Wellbeing',
-        operator: '<',
-        value: '10',
-      },
-    ],
-  };
+  const lowerFirstChar = (str: string) =>
+    str.charAt(0).toLowerCase() + str.slice(1);
 
-  const attributesVisualizations: AttributeVisualization[] = [
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'lineChart',
-    },
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'average',
-    },
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'min',
-    },
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'max',
-    },
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'sum',
-    },
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'aggregate',
-    },
-    {
-      attributeName: 'Unable to work?',
-      visualizationType: 'aggregate',
-    },
-    {
-      attributeName: 'Notes',
-      visualizationType: 'showAll',
-    },
-    {
-      attributeName: 'CRP',
-      visualizationType: 'showAll',
-    },
-    {
-      attributeName: 'Wellbeing',
-      visualizationType: 'showAllWithFilter',
-      filter: testFilterConfig,
-    },
-  ];
+  useEffect(() => {
+    if (props.healthReport.includeMedicationList) {
+      axiosInstance.get('/MedicationPlanEntries').then((response) => {
+        const planEntries: MedicationPlanEntry[] = response.data.filter(
+          (entry: MedicationPlanEntry) => {
+            const entryDate = new Date(entry.startDate);
+            return entryDate >= startDate && entryDate <= endDate;
+          }
+        );
+
+        setMedicationPlanEntries(planEntries);
+      });
+    }
+  }, [endDate, props.healthReport.includeMedicationList, startDate]);
 
   return (
     <>
       <h1>Report Viewer</h1>
       <p>Daily Notes Count: {dailyNotes.length}</p>
-      {attributesVisualizations.map((av, index) => {
+      {props.healthReport.attributesVisualizations.map((av, index) => {
         switch (av.visualizationType) {
           case 'sum': {
             const sum = getAttributeSum(av.attributeName, dailyNotes);
@@ -306,9 +278,163 @@ function ReportViewer() {
           }
         }
       })}
+
+      {props.healthReport.colorCodeConfig && (
+        <>
+          <ColorLegend filters={props.healthReport.colorCodeConfig} />
+          <Flex mt='md' gap='md'>
+            {getFirstDaysOfMonths(startDate, endDate).map((date, index) => (
+              <Paper withBorder key={index}>
+                <Calendar
+                  size='lg'
+                  date={date}
+                  highlightToday={true}
+                  static
+                  weekendDays={[]} // Removes weekend highlight which may conflict with color coding.
+                  renderDay={(date) => {
+                    const day = date.getDate();
+
+                    return (
+                      <Box
+                        fz='1.2rem'
+                        fw='bolder'
+                        c={getColorCodingForDate(
+                          date,
+                          props.healthReport.colorCodeConfig,
+                          dailyNotes
+                        )}
+                      >
+                        {day}
+                      </Box>
+                    );
+                  }}
+                />
+              </Paper>
+            ))}
+          </Flex>
+        </>
+      )}
+
+      {props.healthReport.includeMedicationList && (
+        <DataTable
+          withTableBorder
+          borderRadius='sm'
+          withColumnBorders
+          striped
+          highlightOnHover
+          minHeight={medicationPlanEntries.length > 0 ? 0 : 150} // Set minHeight to 150 if there are no records to show the no records icon.
+          records={medicationPlanEntries}
+          columns={[
+            {
+              accessor: 'id',
+              title: '#',
+              textAlign: 'right',
+            },
+            {
+              accessor: 'startDate',
+              title: t('medicationsPage.medicationPlan.startDate'),
+              render: (value) => {
+                return new Date(value.startDate).toLocaleDateString(locale);
+              },
+            },
+            {
+              accessor: 'endDate',
+              title: t('medicationsPage.medicationPlan.endDate'),
+              render: (value) => {
+                if (value.endDate) {
+                  return new Date(value.endDate).toLocaleDateString(locale);
+                }
+              },
+            },
+            {
+              accessor: 'medication.name',
+              title: t('medicationsPage.medicationPlan.medication'),
+              render: (value) => {
+                return `${value.medication.name} (${value.medication.strength})`;
+              },
+            },
+            {
+              accessor: 'dosage',
+              title: t('medicationsPage.medicationPlan.dosage'),
+            },
+            {
+              accessor: 'schedule.type',
+              title: t('medicationsPage.medicationPlan.type'),
+              render: (value) => {
+                if (value.schedule?.type) {
+                  return t(
+                    `medicationsPage.medicationPlan.addModal.types.${lowerFirstChar(
+                      value.schedule.type
+                    )}`
+                  );
+                }
+              },
+            },
+            {
+              accessor: 'schedule.timesOfDay',
+              title: t('medicationsPage.medicationPlan.timesOfDay'),
+              render: (value) => {
+                if (value.schedule) {
+                  const timesOfDayFormatted = [];
+
+                  for (let i = 0; i < value.schedule.timesOfDay.length; i++) {
+                    const timeString = value.schedule.timesOfDay[i];
+                    const [hours, minutes] = timeString.split(':');
+                    timesOfDayFormatted.push(`${hours}:${minutes}`);
+                  }
+
+                  return timesOfDayFormatted.join(', ');
+                }
+
+                return;
+              },
+            },
+            {
+              accessor: 'schedule.daysOfWeek',
+              title: t('medicationsPage.medicationPlan.daysOfWeek'),
+              render: (value) => {
+                if (value.schedule) {
+                  if (value.schedule.daysOfWeek) {
+                    const localizedDaysOfWeek: string[] = [];
+                    value.schedule.daysOfWeek.forEach((day) => {
+                      localizedDaysOfWeek.push(t(`days.${day.toLowerCase()}`));
+                    });
+                    return localizedDaysOfWeek.join(', ');
+                  }
+                }
+                return;
+              },
+            },
+            {
+              accessor: 'schedule.intervalDays',
+              title: t('medicationsPage.medicationPlan.everyXDays'),
+            },
+            {
+              accessor: 'schedule.intervalWeeks',
+              title: t('medicationsPage.medicationPlan.everyXWeeks'),
+            },
+            {
+              accessor: 'notes',
+              title: t('medicationsPage.medicationPlan.notes'),
+              width: 200,
+            },
+          ]}
+          pinLastColumn
+        />
+      )}
+
+      {props.healthReport.additionalNotes && (
+        <>
+          <Title order={3} mt='md'>
+            Additional Notes
+          </Title>
+          <Paper withBorder mt='md'>
+            {props.healthReport.additionalNotes}
+          </Paper>
+        </>
+      )}
     </>
   );
 }
 
 export default ReportViewer;
-export type { VisualizationType, AttributeVisualization };
