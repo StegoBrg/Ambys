@@ -28,7 +28,7 @@ import MonthPickerComponent from './MonthPickerComponent';
 import WeekPicker from './WeekPicker';
 import { addDays, endOfWeek, startOfWeek } from './WeekPickerUtils';
 import DiaryPageFilterModal from './DiaryPageFilterModal';
-import { readLocalStorageValue } from '@mantine/hooks';
+import { useLocalStorage } from '@mantine/hooks';
 import axiosInstance from '../../lib/axiosInstance';
 
 type ViewModes = 'all' | 'week' | 'month';
@@ -51,11 +51,13 @@ function DiaryPage() {
   // View Mode Week
   const [selectedWeek, setSelectedWeek] = useState(new Date());
 
-  const [filterConfig, setFilterConfig] = useState<
-    DiaryFilterConfiguration | undefined
-  >(undefined);
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
+
+  const [filterConfig, setDiaryFilterStorage, removeDiaryFilterStorage] =
+    useLocalStorage<DiaryFilterConfiguration | undefined>({
+      key: 'diary-filter',
+    });
 
   const getData = useCallback(() => {
     setIsDataLoading(true);
@@ -135,15 +137,6 @@ function DiaryPage() {
   useEffect(() => {
     getData();
   }, [getData]);
-
-  // Update filterConfig
-  useEffect(() => {
-    setFilterConfig(
-      readLocalStorageValue<DiaryFilterConfiguration | undefined>({
-        key: 'diary-filter',
-      })
-    );
-  }, [filterModalOpen]);
 
   // Returns true if the filter applies and the dailyNote should be shown.
   const doesFilterApply = useCallback(
@@ -352,7 +345,7 @@ function DiaryPage() {
               }}
             />
           ) : (
-            <></>
+            <div key={index}></div>
           )
         )}
 
@@ -375,7 +368,14 @@ function DiaryPage() {
       <DiaryPageFilterModal
         opened={filterModalOpen}
         onClose={() => setFilterModalOpen(false)}
-        noteConfig={noteConfig}
+        allAttributes={allAttributes}
+        diaryFilter={filterConfig}
+        onSave={(filter: DiaryFilterConfiguration) => {
+          setDiaryFilterStorage(filter);
+          setIsFilterApplied(true);
+          setFilterModalOpen(false);
+        }}
+        onReset={() => removeDiaryFilterStorage()}
       />
     </>
   );
