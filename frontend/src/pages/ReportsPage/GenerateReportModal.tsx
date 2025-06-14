@@ -57,9 +57,16 @@ function GenerateReportModal(props: Props) {
     checkLocaleLoaded();
   }, [t]);
 
+  console.log(setLocale);
+
   const [reportName, setReportName] = useState<string>(
     'Health Report - ' + new Date().toLocaleDateString(locale)
   );
+
+  useEffect(() => {
+    // Update the report name when the locale changes
+    setReportName('Health Report - ' + new Date().toLocaleDateString(locale));
+  }, [locale]);
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
