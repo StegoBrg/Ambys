@@ -14,7 +14,7 @@ import {
   getAttributeSum,
 } from './VisualizationFunctions';
 
-type VisualizationTypes =
+type VisualizationType =
   | 'sum'
   | 'min'
   | 'max'
@@ -22,11 +22,12 @@ type VisualizationTypes =
   | 'aggregate'
   | 'lineChart'
   | 'showAll'
-  | 'showAllWithFilter';
+  | 'showAllWithFilter'
+  | '';
 
 type AttributeVisualization = {
   attributeName: string;
-  visualizationType: VisualizationTypes;
+  visualizationType: VisualizationType;
   filter?: DiaryFilterConfiguration;
 };
 
@@ -48,7 +49,6 @@ function ReportViewer() {
       )
       .then((response) => {
         setDailyNotes(response.data);
-        console.log('Daily Notes:', response.data);
       });
   }, [endDate, startDate]);
 
@@ -67,9 +67,6 @@ function ReportViewer() {
       },
     ],
   };
-  console.log(
-    getAttributeShowAllWithFilter('Wellbeing', dailyNotes, testFilterConfig)
-  );
 
   const attributesVisualizations: AttributeVisualization[] = [
     {
@@ -116,7 +113,7 @@ function ReportViewer() {
   ];
 
   return (
-    <div>
+    <>
       <h1>Report Viewer</h1>
       <p>Daily Notes Count: {dailyNotes.length}</p>
       {attributesVisualizations.map((av, index) => {
@@ -132,7 +129,6 @@ function ReportViewer() {
           }
           case 'min': {
             const min = getAttributeMin(av.attributeName, dailyNotes);
-            console.log('Min:', min);
 
             if (!min) {
               return (
@@ -153,7 +149,6 @@ function ReportViewer() {
           }
           case 'max': {
             const max = getAttributeMax(av.attributeName, dailyNotes);
-            console.log('Max:', max);
 
             if (!max) {
               return (
@@ -174,7 +169,6 @@ function ReportViewer() {
           }
           case 'average': {
             const average = getAttributeAverage(av.attributeName, dailyNotes);
-            console.log('Average:', average);
 
             if (!average) {
               return (
@@ -196,7 +190,6 @@ function ReportViewer() {
               av.attributeName,
               dailyNotes
             );
-            console.log('Aggregate:', aggregate);
 
             if (!aggregate) {
               return (
@@ -223,7 +216,6 @@ function ReportViewer() {
               av.attributeName,
               dailyNotes
             );
-            console.log('Line Chart Data:', allAttributes);
 
             // Convert the data to the format required by LineChart
             const allAttributesStringDates = allAttributes.map((item) => {
@@ -234,10 +226,8 @@ function ReportViewer() {
             });
 
             return (
-              <>
-                <Box key={index}>
-                  <h2>{av.attributeName} - Line Chart</h2>
-                </Box>
+              <Box key={index}>
+                <h2>{av.attributeName} - Line Chart</h2>
                 <LineChart
                   h={300}
                   data={allAttributesStringDates}
@@ -245,7 +235,7 @@ function ReportViewer() {
                   series={[{ name: 'value', color: 'indigo.6' }]}
                   curveType='linear'
                 />
-              </>
+              </Box>
             );
           }
           case 'showAll': {
@@ -253,7 +243,6 @@ function ReportViewer() {
               av.attributeName,
               dailyNotes
             );
-            console.log('Show All:', allAttributes);
 
             if (!allAttributes) {
               return (
@@ -280,7 +269,6 @@ function ReportViewer() {
               dailyNotes,
               av.filter as DiaryFilterConfiguration
             );
-            console.log('Show All with Filter:', allAttributesWithFilter);
 
             if (!allAttributesWithFilter) {
               return (
@@ -318,8 +306,9 @@ function ReportViewer() {
           }
         }
       })}
-    </div>
+    </>
   );
 }
 
 export default ReportViewer;
+export type { VisualizationType, AttributeVisualization };
