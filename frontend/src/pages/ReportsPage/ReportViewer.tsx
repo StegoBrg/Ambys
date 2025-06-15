@@ -5,7 +5,16 @@ import {
   MedicationPlanEntry,
 } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
-import { Box, Button, Flex, Paper, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Box,
+  Center,
+  Divider,
+  Flex,
+  Grid,
+  Paper,
+  Title,
+} from '@mantine/core';
 import { LineChart } from '@mantine/charts';
 import {
   getAttributeAggregate,
@@ -23,9 +32,19 @@ import { getFirstDaysOfMonths } from './CalendarFunctions';
 import ColorLegend from './ColorLegend';
 import { DataTable } from 'mantine-datatable';
 import { useTranslation } from 'react-i18next';
+import {
+  TbArrowLeft,
+  TbDeviceFloppy,
+  TbFileExport,
+  TbTrash,
+} from 'react-icons/tb';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 interface Props {
   healthReport: HealthReport;
+  preview: boolean; // If true, delete and export button will be replaced by save button
+
+  onBack: () => void;
 }
 
 function ReportViewer(props: Props) {
@@ -53,6 +72,9 @@ function ReportViewer(props: Props) {
   const [medicationPlanEntries, setMedicationPlanEntries] = useState<
     MedicationPlanEntry[]
   >([]);
+
+  const [deleteConfirmationModalOpen, setDeleteConfirmationModalOpen] =
+    useState(false);
 
   useEffect(() => {
     axiosInstance
@@ -86,8 +108,98 @@ function ReportViewer(props: Props) {
 
   return (
     <>
-      <h1>Report Viewer</h1>
-      <p>Daily Notes Count: {dailyNotes.length}</p>
+      <Grid m={5}>
+        <Grid.Col span='content'>
+          <ActionIcon
+            variant='transparent'
+            size='lg'
+            ml={5}
+            onClick={props.onBack}
+          >
+            <TbArrowLeft size={24} />
+          </ActionIcon>
+        </Grid.Col>
+
+        <Grid.Col span='auto'>
+          <Center>
+            <Title order={3}>
+              {props.healthReport.name} {props.preview ? '(Preview)' : ''}
+            </Title>
+          </Center>
+        </Grid.Col>
+
+        <Grid.Col span='content'>
+          {!props.preview && (
+            <>
+              <ActionIcon
+                variant='transparent'
+                color='green'
+                mr={10}
+                onClick={() => {
+                  console.log('EXPORT');
+                }}
+              >
+                <TbFileExport size='2rem' />
+              </ActionIcon>
+              <ActionIcon
+                variant='transparent'
+                color='red'
+                mr={5}
+                onClick={() => setDeleteConfirmationModalOpen(true)}
+              >
+                <TbTrash size='2rem' />
+              </ActionIcon>
+            </>
+          )}
+
+          {props.preview && (
+            <ActionIcon
+              variant='transparent'
+              color='green'
+              mr={10}
+              onClick={() => {
+                const healthReportStringDates: HealthReportStringDates = {
+                  id: props.healthReport.id,
+                  name: props.healthReport.name,
+                  startDate: props.healthReport.startDate
+                    .toISOString()
+                    .split('T')[0],
+                  endDate: props.healthReport.endDate
+                    .toISOString()
+                    .split('T')[0],
+                  attributesVisualizations:
+                    props.healthReport.attributesVisualizations,
+                  colorCodeConfig: props.healthReport.colorCodeConfig,
+                  includeMedicationList:
+                    props.healthReport.includeMedicationList,
+                  additionalNotes: props.healthReport.additionalNotes,
+                };
+
+                axiosInstance
+                  .post<HealthReport[]>(
+                    'HealthReportConfigs',
+                    healthReportStringDates
+                  )
+                  .then(() => {
+                    props.onBack();
+                  });
+              }}
+            >
+              <TbDeviceFloppy size='2rem' />
+            </ActionIcon>
+          )}
+        </Grid.Col>
+      </Grid>
+      <Divider />
+
+      <Center>
+        <Paper withBorder m={10} p={10}>
+          {props.healthReport.startDate.toLocaleDateString(locale)} -{' '}
+          {props.healthReport.endDate.toLocaleDateString(locale)}
+          <p>Daily Notes Count: {dailyNotes.length}</p>
+        </Paper>
+      </Center>
+
       {props.healthReport.attributesVisualizations.map((av, index) => {
         switch (av.visualizationType) {
           case 'sum': {
@@ -279,49 +391,51 @@ function ReportViewer(props: Props) {
         }
       })}
 
-      {props.healthReport.colorCodeConfig && (
-        <>
-          <ColorLegend filters={props.healthReport.colorCodeConfig} />
-          <Flex mt='md' gap='md'>
-            {getFirstDaysOfMonths(startDate, endDate).map((date, index) => (
-              <Paper withBorder key={index}>
-                <Calendar
-                  size='lg'
-                  date={date}
-                  highlightToday={true}
-                  static
-                  weekendDays={[]} // Removes weekend highlight which may conflict with color coding.
-                  renderDay={(date) => {
-                    const day = date.getDate();
+      {console.log(props.healthReport.colorCodeConfig)}
+      {props.healthReport.colorCodeConfig &&
+        props.healthReport.colorCodeConfig.length > 0 && (
+          <>
+            <ColorLegend filters={props.healthReport.colorCodeConfig} />
+            <Flex mt='md' gap='md'>
+              {getFirstDaysOfMonths(startDate, endDate).map((date, index) => (
+                <Paper withBorder key={index}>
+                  <Calendar
+                    size='lg'
+                    date={date}
+                    highlightToday={true}
+                    static
+                    weekendDays={[]} // Removes weekend highlight which may conflict with color coding.
+                    renderDay={(date) => {
+                      const day = date.getDate();
 
-                    return (
-                      <Box
-                        fz='1.2rem'
-                        fw='bolder'
-                        c={getColorCodingForDate(
-                          date,
-                          props.healthReport.colorCodeConfig,
-                          dailyNotes
-                        )}
-                      >
-                        {day}
-                      </Box>
-                    );
-                  }}
-                />
-              </Paper>
-            ))}
-          </Flex>
-        </>
-      )}
+                      return (
+                        <Box
+                          fz='1.2rem'
+                          fw='bolder'
+                          c={getColorCodingForDate(
+                            date,
+                            props.healthReport.colorCodeConfig,
+                            dailyNotes
+                          )}
+                        >
+                          {day}
+                        </Box>
+                      );
+                    }}
+                  />
+                </Paper>
+              ))}
+            </Flex>
+          </>
+        )}
 
       {props.healthReport.includeMedicationList && (
         <DataTable
+          mt={20}
           withTableBorder
           borderRadius='sm'
           withColumnBorders
           striped
-          highlightOnHover
           minHeight={medicationPlanEntries.length > 0 ? 0 : 150} // Set minHeight to 150 if there are no records to show the no records icon.
           records={medicationPlanEntries}
           columns={[
@@ -418,8 +532,11 @@ function ReportViewer(props: Props) {
               title: t('medicationsPage.medicationPlan.notes'),
               width: 200,
             },
+            {
+              accessor: 'stoppedReason',
+              title: t('medicationsPage.medicationPlan.stoppedReason'),
+            },
           ]}
-          pinLastColumn
         />
       )}
 
@@ -428,37 +545,16 @@ function ReportViewer(props: Props) {
           <Title order={3} mt='md'>
             Additional Notes
           </Title>
-          <Paper withBorder mt='md'>
-            {props.healthReport.additionalNotes}
-          </Paper>
+          <Paper mt='md'>{props.healthReport.additionalNotes}</Paper>
         </>
       )}
 
-      <Button
-        mt={20}
-        onClick={() => {
-          const healthReportStringDates: HealthReportStringDates = {
-            name: props.healthReport.name,
-            startDate: props.healthReport.startDate.toISOString().split('T')[0],
-            endDate: props.healthReport.endDate.toISOString().split('T')[0],
-            attributesVisualizations:
-              props.healthReport.attributesVisualizations,
-            colorCodeConfig: props.healthReport.colorCodeConfig,
-            includeMedicationList: props.healthReport.includeMedicationList,
-            additionalNotes: props.healthReport.additionalNotes,
-          };
-
-          console.log(healthReportStringDates);
-
-          axiosInstance
-            .post<HealthReport[]>('HealthReportConfig', healthReportStringDates)
-            .then((response) => {
-              console.log(response);
-            });
-        }}
-      >
-        Save to database
-      </Button>
+      <DeleteConfirmationModal
+        opened={deleteConfirmationModalOpen}
+        onClose={() => setDeleteConfirmationModalOpen(false)}
+        elementToDelete={props.healthReport}
+        onDelete={() => props.onBack()}
+      />
     </>
   );
 }

@@ -3,36 +3,60 @@ import GenerateReportModal from './GenerateReportModal';
 import ReportViewer from './ReportViewer';
 import { HealthReport } from './Types';
 import ReportOverview from './ReportOverview';
+import { ActionIcon, Box } from '@mantine/core';
+import { IoAdd } from 'react-icons/io5';
 
-// Reports will be selectable like notebooks. Each report has a json object that represents the attributes etc and how to visualize them.
-// The report will be generated (new every time) based on the selected attributes and visualizations.
 function ReportsPage() {
-  const [previewReport, setPreviewReport] = useState<
-    HealthReport | undefined
-  >();
+  const [report, setReport] = useState<HealthReport | null>(null);
+  const [preview, setPreview] = useState(false);
 
-  const [generateReportModalOpen, setGenerateReportModalOpen] = useState(true);
+  const [generateReportModalOpen, setGenerateReportModalOpen] = useState(false);
 
   return (
     <>
-      <div>
-        <h1>Reports Page</h1>
-        <p>This is the reports page where you can view and manage reports.</p>
-      </div>
+      {report === null && (
+        <>
+          <ReportOverview
+            onClick={(report) => {
+              setReport(report);
+              setPreview(false);
+            }}
+          />
+          <GenerateReportModal
+            opened={generateReportModalOpen}
+            onClose={() => setGenerateReportModalOpen(false)}
+            onSave={(report) => {
+              setReport(report);
+              setPreview(true);
+            }}
+          />
+          <ActionIcon
+            aria-label='Create'
+            color='blue'
+            size='3.5rem'
+            radius='xl'
+            onClick={() => setGenerateReportModalOpen(true)}
+            style={{
+              position: 'fixed',
+              bottom: 20,
+              right: 20,
+              outline: '2px solid black',
+            }}
+          >
+            <IoAdd size='2rem' />
+          </ActionIcon>
+        </>
+      )}
 
-      <ReportOverview />
-
-      {
-        <GenerateReportModal
-          opened={generateReportModalOpen}
-          onClose={() => setGenerateReportModalOpen(false)}
-          onSave={(report) => {
-            setPreviewReport(report);
-          }}
-        />
-      }
-
-      {previewReport && <ReportViewer healthReport={previewReport} />}
+      {report && (
+        <Box m={20}>
+          <ReportViewer
+            healthReport={report}
+            onBack={() => setReport(null)}
+            preview={preview}
+          />
+        </Box>
+      )}
     </>
   );
 }

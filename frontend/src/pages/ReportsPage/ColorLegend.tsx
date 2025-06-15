@@ -18,34 +18,38 @@ function ColorLegend({ filters }: LegendProps) {
   return (
     <div>
       <h3>Applied Color Filters</h3>
-      <ul>
-        {filters.map((filter, index) => (
-          <li
-            key={index}
-            style={{ display: 'flex', alignItems: 'center', marginBottom: 8 }}
-          >
-            <div
-              style={{
-                width: 16,
-                height: 16,
-                backgroundColor: filter.colorHex,
-                borderRadius: 4,
-                marginRight: 8,
-              }}
-            />
-            <span>
-              {filter.clauses
-                .map(
-                  (clause) =>
-                    `${clause.element} ${clause.operator}${
-                      clause.value ? ` ${clause.value}` : ''
-                    }`
-                )
-                .join(` ${filter.logicGate} `)}
-            </span>
-          </li>
-        ))}
-      </ul>
+
+      {filters.map((filter, index) => (
+        <li
+          key={index}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
+            marginBottom: 8,
+          }}
+        >
+          <div
+            style={{
+              width: 16,
+              height: 16,
+              backgroundColor: filter.colorHex,
+              borderRadius: 4,
+              marginRight: 8,
+            }}
+          />
+          <span>
+            {filter.clauses
+              .map(
+                (clause) =>
+                  `${clause.element} ${clause.operator}${
+                    clause.value ? ` ${clause.value}` : ''
+                  }`
+              )
+              .join(` ${filter.logicGate} `)}
+          </span>
+        </li>
+      ))}
     </div>
   );
 }

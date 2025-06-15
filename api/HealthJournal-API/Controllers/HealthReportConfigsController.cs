@@ -15,12 +15,12 @@ namespace HealthJournal_API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme + ",PersonalAccessToken")]
-    public class HealthReportConfigController : ControllerBase
+    public class HealthReportConfigsController : ControllerBase
     {
         private readonly IHealthReportConfigRepository healthReportConfigRepository;
         private readonly IMapper mapper;
 
-        public HealthReportConfigController(IHealthReportConfigRepository healthReportConfigRepository, IMapper mapper)
+        public HealthReportConfigsController(IHealthReportConfigRepository healthReportConfigRepository, IMapper mapper)
         {
             this.healthReportConfigRepository = healthReportConfigRepository;
             this.mapper = mapper;

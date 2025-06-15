@@ -18,6 +18,7 @@ type AttributeVisualization = {
 };
 
 type HealthReport = {
+  id?: number;
   name: string;
   startDate: Date;
   endDate: Date;
@@ -28,6 +29,7 @@ type HealthReport = {
 };
 
 type HealthReportStringDates = {
+  id?: number;
   name: string;
   startDate: string;
   endDate: string;
