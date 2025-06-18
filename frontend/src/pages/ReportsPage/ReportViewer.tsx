@@ -8,11 +8,13 @@ import axiosInstance from '../../lib/axiosInstance';
 import {
   ActionIcon,
   Box,
-  Center,
   Divider,
+  em,
   Flex,
   Grid,
+  Group,
   Paper,
+  Space,
   Title,
 } from '@mantine/core';
 import { LineChart } from '@mantine/charts';
@@ -35,21 +37,26 @@ import { useTranslation } from 'react-i18next';
 import {
   TbArrowLeft,
   TbDeviceFloppy,
+  TbEdit,
   TbFileExport,
   TbTrash,
 } from 'react-icons/tb';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
+import { useMediaQuery } from '@mantine/hooks';
+import ReportHeader from './ReportHeader';
 
 interface Props {
   healthReport: HealthReport;
   preview: boolean; // If true, delete and export button will be replaced by save button
 
   onBack: () => void;
+  onEditPreview: () => void;
 }
 
 function ReportViewer(props: Props) {
   const { t } = useTranslation();
   const [locale, setLocale] = useState('en');
+  const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
   // Update locale if string is loaded from i18next.
   useEffect(() => {
@@ -120,13 +127,7 @@ function ReportViewer(props: Props) {
           </ActionIcon>
         </Grid.Col>
 
-        <Grid.Col span='auto'>
-          <Center>
-            <Title order={3}>
-              {props.healthReport.name} {props.preview ? '(Preview)' : ''}
-            </Title>
-          </Center>
-        </Grid.Col>
+        <Grid.Col span='auto'></Grid.Col>
 
         <Grid.Col span='content'>
           {!props.preview && (
@@ -153,52 +154,64 @@ function ReportViewer(props: Props) {
           )}
 
           {props.preview && (
-            <ActionIcon
-              variant='transparent'
-              color='green'
-              mr={10}
-              onClick={() => {
-                const healthReportStringDates: HealthReportStringDates = {
-                  id: props.healthReport.id,
-                  name: props.healthReport.name,
-                  startDate: props.healthReport.startDate
-                    .toISOString()
-                    .split('T')[0],
-                  endDate: props.healthReport.endDate
-                    .toISOString()
-                    .split('T')[0],
-                  attributesVisualizations:
-                    props.healthReport.attributesVisualizations,
-                  colorCodeConfig: props.healthReport.colorCodeConfig,
-                  includeMedicationList:
-                    props.healthReport.includeMedicationList,
-                  additionalNotes: props.healthReport.additionalNotes,
-                };
+            <Group gap='md'>
+              <ActionIcon
+                variant='transparent'
+                color='blue'
+                mr={10}
+                onClick={props.onEditPreview}
+              >
+                <TbEdit size='2rem' />
+              </ActionIcon>
 
-                axiosInstance
-                  .post<HealthReport[]>(
-                    'HealthReportConfigs',
-                    healthReportStringDates
-                  )
-                  .then(() => {
-                    props.onBack();
-                  });
-              }}
-            >
-              <TbDeviceFloppy size='2rem' />
-            </ActionIcon>
+              <ActionIcon
+                variant='transparent'
+                color='green'
+                mr={10}
+                onClick={() => {
+                  const healthReportStringDates: HealthReportStringDates = {
+                    id: props.healthReport.id,
+                    name: props.healthReport.name,
+                    startDate: props.healthReport.startDate
+                      .toISOString()
+                      .split('T')[0],
+                    endDate: props.healthReport.endDate
+                      .toISOString()
+                      .split('T')[0],
+                    attributesVisualizations:
+                      props.healthReport.attributesVisualizations,
+                    colorCodeConfig: props.healthReport.colorCodeConfig,
+                    includeMedicationList:
+                      props.healthReport.includeMedicationList,
+                    additionalNotes: props.healthReport.additionalNotes,
+                  };
+
+                  axiosInstance
+                    .post<HealthReport[]>(
+                      'HealthReportConfigs',
+                      healthReportStringDates
+                    )
+                    .then(() => {
+                      props.onBack();
+                    });
+                }}
+              >
+                <TbDeviceFloppy size='2rem' />
+              </ActionIcon>
+            </Group>
           )}
         </Grid.Col>
       </Grid>
       <Divider />
 
-      <Center>
-        <Paper withBorder m={10} p={10}>
-          {props.healthReport.startDate.toLocaleDateString(locale)} -{' '}
-          {props.healthReport.endDate.toLocaleDateString(locale)}
-          <p>Daily Notes Count: {dailyNotes.length}</p>
-        </Paper>
-      </Center>
+      <Space h='md' />
+
+      <ReportHeader
+        name={props.healthReport.name}
+        dailyNoteCount={dailyNotes.length}
+        startDate={props.healthReport.startDate.toLocaleDateString(locale)}
+        endDate={props.healthReport.endDate.toLocaleDateString(locale)}
+      />
 
       {props.healthReport.attributesVisualizations.map((av, index) => {
         switch (av.visualizationType) {
@@ -391,12 +404,11 @@ function ReportViewer(props: Props) {
         }
       })}
 
-      {console.log(props.healthReport.colorCodeConfig)}
       {props.healthReport.colorCodeConfig &&
         props.healthReport.colorCodeConfig.length > 0 && (
           <>
             <ColorLegend filters={props.healthReport.colorCodeConfig} />
-            <Flex mt='md' gap='md'>
+            <Flex mt='md' gap='md' direction={isMobile ? 'column' : 'row'}>
               {getFirstDaysOfMonths(startDate, endDate).map((date, index) => (
                 <Paper withBorder key={index}>
                   <Calendar

@@ -22,14 +22,7 @@ function ReportsPage() {
               setPreview(false);
             }}
           />
-          <GenerateReportModal
-            opened={generateReportModalOpen}
-            onClose={() => setGenerateReportModalOpen(false)}
-            onSave={(report) => {
-              setReport(report);
-              setPreview(true);
-            }}
-          />
+
           <ActionIcon
             aria-label='Create'
             color='blue'
@@ -53,10 +46,23 @@ function ReportsPage() {
           <ReportViewer
             healthReport={report}
             onBack={() => setReport(null)}
+            onEditPreview={() => {
+              setGenerateReportModalOpen(true);
+              console.log(generateReportModalOpen);
+            }}
             preview={preview}
           />
         </Box>
       )}
+
+      <GenerateReportModal
+        opened={generateReportModalOpen}
+        onClose={() => setGenerateReportModalOpen(false)}
+        onSave={(report) => {
+          setReport(report);
+          setPreview(true);
+        }}
+      />
     </>
   );
 }
