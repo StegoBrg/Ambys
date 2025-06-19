@@ -12,7 +12,6 @@ import {
   Center,
   Table,
   em,
-  Alert,
   Box,
   TextInput,
 } from '@mantine/core';
@@ -66,6 +65,8 @@ function GenerateReportModal(props: Props) {
     setReportName('Health Report - ' + new Date().toLocaleDateString(locale));
   }, [locale]);
 
+  const [folder, setFolder] = useState<string>('');
+
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
@@ -115,6 +116,7 @@ function GenerateReportModal(props: Props) {
   function handleSave() {
     const report: HealthReport = {
       name: reportName,
+      folder: folder,
       startDate: startDate,
       endDate: endDate,
       attributesVisualizations: attributesVisualizations,
@@ -135,16 +137,26 @@ function GenerateReportModal(props: Props) {
       size='lg'
       fullScreen={isMobile}
     >
-      <Alert color='red' variant='light'>
-        List all errors here that make the report generation impossible, e.g
-        missing filters or incompatible visualizationtypes
-      </Alert>
-
       <TextInput
         value={reportName}
         onChange={(e) => setReportName(e.target.value)}
         label='Report Name'
         withAsterisk
+        mt={10}
+        mb={10}
+      />
+
+      <TextInput
+        value={folder}
+        description="Folder, seperated by '/' (e.g. '2024/January')"
+        onChange={(e) => setFolder(e.target.value)}
+        label='Folder'
+        withAsterisk
+        error={
+          folder.endsWith('/') || folder.startsWith('/')
+            ? 'Folder path should not start or end with a "/"'
+            : null
+        }
         mt={10}
         mb={10}
       />

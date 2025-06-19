@@ -35,6 +35,7 @@ function ReportOverview(props: Props) {
                 const report: HealthReport = {
                   id: value.id,
                   name: value.name,
+                  folder: value.folder,
                   startDate: new Date(value.startDate),
                   endDate: new Date(value.endDate),
                   attributesVisualizations: value.attributesVisualizations,

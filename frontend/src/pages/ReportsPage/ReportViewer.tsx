@@ -172,6 +172,7 @@ function ReportViewer(props: Props) {
                   const healthReportStringDates: HealthReportStringDates = {
                     id: props.healthReport.id,
                     name: props.healthReport.name,
+                    folder: props.healthReport.folder,
                     startDate: props.healthReport.startDate
                       .toISOString()
                       .split('T')[0],

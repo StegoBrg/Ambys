@@ -7,6 +7,7 @@ namespace HealthJournal_API.Models.Domain
         public required int Id { get; set; }
         public required string UserId { get; set; }
         public required string Name { get; set; }
+        public required string? Folder { get; set; }
         public DateOnly StartDate { get; set; }
         public DateOnly EndDate { get; set; }
         public List<AttributeVisualization> AttributesVisualizations { get; set; } = new List<AttributeVisualization>();

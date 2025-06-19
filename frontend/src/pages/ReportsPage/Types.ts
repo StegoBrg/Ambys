@@ -20,6 +20,7 @@ type AttributeVisualization = {
 type HealthReport = {
   id?: number;
   name: string;
+  folder: string;
   startDate: Date;
   endDate: Date;
   attributesVisualizations: AttributeVisualization[];
@@ -31,6 +32,7 @@ type HealthReport = {
 type HealthReportStringDates = {
   id?: number;
   name: string;
+  folder: string;
   startDate: string;
   endDate: string;
   attributesVisualizations: AttributeVisualization[];
