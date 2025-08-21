@@ -8,7 +8,6 @@ import {
   Stack,
   Title,
   Text,
-  Box,
   NavLink,
 } from "@mantine/core";
 import { TbFolder } from "react-icons/tb";
