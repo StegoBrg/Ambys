@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { HealthReport, HealthReportStringDates } from './Types';
-import axiosInstance from '../../lib/axiosInstance';
+import { useEffect, useState } from "react";
+import { HealthReport, HealthReportStringDates } from "./Types";
+import axiosInstance from "../../lib/axiosInstance";
 import {
   Card,
   Center,
@@ -10,11 +10,81 @@ import {
   Text,
   Box,
   NavLink,
-} from '@mantine/core';
-import { TbFolder } from 'react-icons/tb';
+} from "@mantine/core";
+import { TbFolder } from "react-icons/tb";
 
 interface Props {
   onClick: (report: HealthReport) => void;
+}
+
+interface FolderNode {
+  folders: Record<string, FolderNode>;
+  reports: HealthReportStringDates[];
+}
+
+interface FolderViewProps {
+  tree: Record<string, FolderNode>;
+  onReportClick: (report: HealthReport) => void;
+}
+
+function FolderView(props: FolderViewProps) {
+  return (
+    <>
+      <Stack w="100%" maw={600} gap={"xs"}>
+        {Object.entries(props.tree).map(
+          ([folderName, { folders, reports }]) => (
+            <NavLink
+              label={<Title order={4}>{folderName}</Title>}
+              leftSection={<TbFolder size={20} />}
+              mt={10}
+              key={folderName}
+            >
+              {/* Render reports */}
+              <Stack>
+                {reports.map((reportConfig) => (
+                  <Card
+                    w="100%"
+                    key={reportConfig.id}
+                    withBorder
+                    shadow="sm"
+                    padding="md"
+                    onClick={() => {
+                      const report: HealthReport = {
+                        id: reportConfig.id,
+                        name: reportConfig.name,
+                        folder: reportConfig.folder,
+                        startDate: new Date(reportConfig.startDate),
+                        endDate: new Date(reportConfig.endDate),
+                        attributesVisualizations:
+                          reportConfig.attributesVisualizations,
+                        colorCodeConfig: reportConfig.colorCodeConfig,
+                        includeMedicationList:
+                          reportConfig.includeMedicationList,
+                        additionalNotes: reportConfig.additionalNotes,
+                      };
+
+                      props.onReportClick(report);
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <Group>
+                      <Text fw={500}>{reportConfig.name}</Text>
+                      <Text size="sm" c="dimmed">
+                        {reportConfig.startDate} ➤ {reportConfig.endDate}
+                      </Text>
+                    </Group>
+                  </Card>
+                ))}
+              </Stack>
+
+              {/* Render subfolders recursively */}
+              <FolderView tree={folders} onReportClick={props.onReportClick} />
+            </NavLink>
+          )
+        )}
+      </Stack>
+    </>
+  );
 }
 
 function ReportOverview(props: Props) {
@@ -24,73 +94,37 @@ function ReportOverview(props: Props) {
 
   useEffect(() => {
     axiosInstance
-      .get<HealthReportStringDates[]>('HealthReportConfigs')
+      .get<HealthReportStringDates[]>("HealthReportConfigs")
       .then((response) => {
         setAllReportsConfigs(response.data);
       });
   }, []);
 
-  const folders = allReportConfigs.reduce<
-    Record<string, HealthReportStringDates[]>
-  >((acc, report) => {
-    acc[report.folder] = acc[report.folder] || [];
-    acc[report.folder].push(report);
-    return acc;
-  }, {});
+  const root: Record<string, FolderNode> = {};
+  allReportConfigs.forEach((report) => {
+    const allFolders = report.folder.split("/");
+    let currentLevel = root;
 
-  console.log('Folders:', folders);
+    allFolders.forEach((folder, index) => {
+      if (!currentLevel[folder]) {
+        currentLevel[folder] = {
+          folders: {},
+          reports: [],
+        };
+      }
+
+      if (index === allFolders.length - 1) {
+        currentLevel[folder].reports.push(report);
+      } else {
+        currentLevel = currentLevel[folder].folders;
+      }
+    });
+  });
 
   return (
     <>
       <Center mt={20}>
-        <Stack w='100%' maw={600}>
-          {Object.entries(folders).map(([folderName, folderReports]) => (
-            <Box key={folderName}>
-              <NavLink
-                label={<Title order={4}>{folderName}</Title>}
-                leftSection={<TbFolder size={20} />}
-                mb={10}
-              >
-                <Stack>
-                  {folderReports.map((reportConfig) => (
-                    <Card
-                      w='100%'
-                      key={reportConfig.id}
-                      withBorder
-                      shadow='sm'
-                      padding='md'
-                      onClick={() => {
-                        const report: HealthReport = {
-                          id: reportConfig.id,
-                          name: reportConfig.name,
-                          folder: reportConfig.folder,
-                          startDate: new Date(reportConfig.startDate),
-                          endDate: new Date(reportConfig.endDate),
-                          attributesVisualizations:
-                            reportConfig.attributesVisualizations,
-                          colorCodeConfig: reportConfig.colorCodeConfig,
-                          includeMedicationList:
-                            reportConfig.includeMedicationList,
-                          additionalNotes: reportConfig.additionalNotes,
-                        };
-
-                        props.onClick(report);
-                      }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Group>
-                        <Text fw={500}>{reportConfig.name}</Text>
-                        <Text size='sm' c='dimmed'>
-                          {reportConfig.startDate} → {reportConfig.endDate}
-                        </Text>
-                      </Group>
-                    </Card>
-                  ))}
-                </Stack>
-              </NavLink>
-            </Box>
-          ))}
-        </Stack>
+        <FolderView tree={root} onReportClick={props.onClick} />
       </Center>
     </>
   );
