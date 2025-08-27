@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { HealthReport, HealthReportStringDates } from "./Types";
-import axiosInstance from "../../lib/axiosInstance";
+import { useEffect, useState } from 'react';
+import { HealthReport, HealthReportStringDates } from './Types';
+import axiosInstance from '../../lib/axiosInstance';
 import {
   Card,
   Center,
@@ -9,8 +9,8 @@ import {
   Title,
   Text,
   NavLink,
-} from "@mantine/core";
-import { TbFolder } from "react-icons/tb";
+} from '@mantine/core';
+import { TbFolder } from 'react-icons/tb';
 
 interface Props {
   onClick: (report: HealthReport) => void;
@@ -29,7 +29,7 @@ interface FolderViewProps {
 function FolderView(props: FolderViewProps) {
   return (
     <>
-      <Stack w="100%" maw={600} gap={"xs"}>
+      <Stack w='100%' maw={600} gap={'xs'}>
         {Object.entries(props.tree).map(
           ([folderName, { folders, reports }]) => (
             <NavLink
@@ -42,11 +42,11 @@ function FolderView(props: FolderViewProps) {
               <Stack>
                 {reports.map((reportConfig) => (
                   <Card
-                    w="100%"
+                    w='100%'
                     key={reportConfig.id}
                     withBorder
-                    shadow="sm"
-                    padding="md"
+                    shadow='sm'
+                    padding='md'
                     onClick={() => {
                       const report: HealthReport = {
                         id: reportConfig.id,
@@ -64,12 +64,13 @@ function FolderView(props: FolderViewProps) {
 
                       props.onReportClick(report);
                     }}
-                    style={{ cursor: "pointer" }}
+                    style={{ cursor: 'pointer' }}
                   >
                     <Group>
                       <Text fw={500}>{reportConfig.name}</Text>
-                      <Text size="sm" c="dimmed">
-                        {reportConfig.startDate} ➤ {reportConfig.endDate}
+                      <Text size='sm' c='dimmed'>
+                        {new Date(reportConfig.startDate).toLocaleDateString()}{' '}
+                        ➤ {new Date(reportConfig.endDate).toLocaleDateString()}
                       </Text>
                     </Group>
                   </Card>
@@ -93,7 +94,7 @@ function ReportOverview(props: Props) {
 
   useEffect(() => {
     axiosInstance
-      .get<HealthReportStringDates[]>("HealthReportConfigs")
+      .get<HealthReportStringDates[]>('HealthReportConfigs')
       .then((response) => {
         setAllReportsConfigs(response.data);
       });
@@ -101,7 +102,7 @@ function ReportOverview(props: Props) {
 
   const root: Record<string, FolderNode> = {};
   allReportConfigs.forEach((report) => {
-    const allFolders = report.folder.split("/");
+    const allFolders = report.folder.split('/');
     let currentLevel = root;
 
     allFolders.forEach((folder, index) => {
