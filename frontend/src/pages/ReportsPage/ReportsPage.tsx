@@ -3,7 +3,7 @@ import GenerateReportModal from './GenerateReportModal';
 import ReportViewer from './ReportViewer';
 import { HealthReport } from './Types';
 import ReportOverview from './ReportOverview';
-import { ActionIcon, Box } from '@mantine/core';
+import { ActionIcon } from '@mantine/core';
 import { IoAdd } from 'react-icons/io5';
 
 function ReportsPage() {
@@ -42,17 +42,15 @@ function ReportsPage() {
       )}
 
       {report && (
-        <Box m={20}>
-          <ReportViewer
-            healthReport={report}
-            onBack={() => setReport(null)}
-            onEditPreview={() => {
-              setGenerateReportModalOpen(true);
-              console.log(generateReportModalOpen);
-            }}
-            preview={preview}
-          />
-        </Box>
+        <ReportViewer
+          healthReport={report}
+          onBack={() => setReport(null)}
+          onEditPreview={() => {
+            setGenerateReportModalOpen(true);
+            console.log(generateReportModalOpen);
+          }}
+          preview={preview}
+        />
       )}
 
       <GenerateReportModal
