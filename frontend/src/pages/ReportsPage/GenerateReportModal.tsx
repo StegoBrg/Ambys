@@ -57,12 +57,16 @@ function GenerateReportModal(props: Props) {
   }, [t]);
 
   const [reportName, setReportName] = useState<string>(
-    'Health Report - ' + new Date().toLocaleDateString(locale)
+    `${t('reportsPage.addModal.healthReport')} - ` +
+      new Date().toLocaleDateString(locale)
   );
 
   useEffect(() => {
     // Update the report name when the locale changes
-    setReportName('Health Report - ' + new Date().toLocaleDateString(locale));
+    setReportName(
+      `${t('reportsPage.addModal.healthReport')} - ` +
+        new Date().toLocaleDateString(locale)
+    );
   }, [locale]);
 
   const [folder, setFolder] = useState<string>('');
@@ -133,14 +137,14 @@ function GenerateReportModal(props: Props) {
     <Modal
       opened={props.opened}
       onClose={() => props.onClose()}
-      title='Generate Report'
+      title={t('reportsPage.addModal.title')}
       size='lg'
       fullScreen={isMobile}
     >
       <TextInput
         value={reportName}
         onChange={(e) => setReportName(e.target.value)}
-        label='Report Name'
+        label={t('reportsPage.addModal.reportName')}
         withAsterisk
         mt={10}
         mb={10}
@@ -148,13 +152,13 @@ function GenerateReportModal(props: Props) {
 
       <TextInput
         value={folder}
-        description="Folder, seperated by '/' (e.g. '2024/January')"
+        description={t('reportsPage.addModal.folderDesc')}
         onChange={(e) => setFolder(e.target.value)}
-        label='Folder'
+        label={t('reportsPage.addModal.folderLabel')}
         withAsterisk
         error={
           folder.endsWith('/') || folder.startsWith('/')
-            ? 'Folder path should not start or end with a "/"'
+            ? t('reportsPage.addModal.folderErr')
             : null
         }
         mt={10}
@@ -163,7 +167,7 @@ function GenerateReportModal(props: Props) {
 
       <Group grow>
         <DatePickerInput
-          label='Start Date'
+          label={t('reportsPage.addModal.startDate')}
           withAsterisk
           value={startDate}
           locale={locale}
@@ -175,7 +179,7 @@ function GenerateReportModal(props: Props) {
         />
 
         <DatePickerInput
-          label='End Date'
+          label={t('reportsPage.addModal.endDate')}
           withAsterisk
           value={endDate}
           locale={locale}
@@ -193,8 +197,8 @@ function GenerateReportModal(props: Props) {
             <Table.Thead>
               <Table.Tr>
                 <Table.Th></Table.Th>
-                <Table.Th>Attribute</Table.Th>
-                <Table.Th>Visualization</Table.Th>
+                <Table.Th>{t('reportsPage.addModal.attribute')}</Table.Th>
+                <Table.Th>{t('reportsPage.addModal.visualization')}</Table.Th>
                 <Table.Th></Table.Th>
               </Table.Tr>
             </Table.Thead>
@@ -291,7 +295,7 @@ function GenerateReportModal(props: Props) {
         </div>
 
         <div>
-          <Title order={4}>Calendar View</Title>
+          <Title order={4}>{t('reportsPage.addModal.calendarView')}</Title>
           <Divider />
 
           {calendarViewFilter && (
@@ -301,7 +305,7 @@ function GenerateReportModal(props: Props) {
                 leftSection={<TbEdit size='1.5rem' />}
                 onClick={() => setColorCodeModalOpen(true)}
               >
-                Color Code Calendar
+                {t('reportsPage.addModal.colorCodeCalendar')}
               </Button>
             </Center>
           )}
@@ -325,15 +329,15 @@ function GenerateReportModal(props: Props) {
 
         <Box mt={10}>
           <Checkbox
-            label={'Include Medication List'}
+            label={t('reportsPage.addModal.includeMedicationList')}
             checked={includeMedicationList}
             onChange={(e) => setIncludeMedicationList(e.currentTarget.checked)}
           />
         </Box>
 
         <Textarea
-          label='Additional Notes'
-          placeholder='Enter any additional notes for the report...'
+          label={t('reportsPage.addModal.additionalNotes')}
+          placeholder={t('reportsPage.addModal.notesPlaceholder')}
           autosize
           value={additionalNotes}
           onChange={(e) => setAdditionalNotes(e.currentTarget.value)}
@@ -342,10 +346,12 @@ function GenerateReportModal(props: Props) {
       </Stack>
 
       <Group mt={20}>
-        <Button onClick={handleSave}>Preview Report</Button>
+        <Button onClick={handleSave}>
+          {t('reportsPage.addModal.previewReport')}
+        </Button>
 
         <Button variant='outline' onClick={() => props.onClose()}>
-          Cancel
+          {t('reportsPage.addModal.cancel')}
         </Button>
       </Group>
 
@@ -364,7 +370,6 @@ function GenerateReportModal(props: Props) {
             attributesVisualizations[indexOfSelectedAttributeVisFilter].filter
           }
           onSave={(filter) => {
-            console.log('Saving filter:', filter);
             const updatedVisualizations = structuredClone(
               attributesVisualizations
             );

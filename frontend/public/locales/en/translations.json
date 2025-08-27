@@ -305,6 +305,46 @@
     }
   },
 
+  "reportsPage": {
+    "headerDailyNotesCount": "Daily Notes Count:",
+    "noValidValues": "No valid values found!",
+    "sum": "Sum",
+    "min": "Min",
+    "max": "Max",
+    "avg": "Average",
+    "aggregate": "Aggregate",
+    "lineChart": "Line Chart",
+    "showAll": "Show All",
+    "showAllFilter": "Show All with Filter",
+    "filter": "Filter",
+    "additionalNotes": "Additional Notes",
+
+    "deleteConfirmModal": {
+      "title": "Confirm Delete",
+      "confirmText": "Do you really want to delete? This cannot be undone!"
+    },
+
+    "addModal": {
+      "healthReport": "Health Report",
+      "title": "Generate Report",
+      "reportName": "Report Name",
+      "folderLabel": "Folder",
+      "folderDesc": "Folder, seperated by '/' (e.g. '2024/January')",
+      "folderErr": "Folder path should not start or end with a \"/\"",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "attribute": "Attribute",
+      "visualization": "Visualization",
+      "calendarView": "Calendar View",
+      "colorCodeCalendar": "Color Code Calendar",
+      "includeMedicationList": "Include Medication List",
+      "additionalNotes": "Additional Notes",
+      "notesPlaceholder": "Enter any additional notes for the report...",
+      "previewReport": "Preview Report",
+      "cancel": "Cancel"
+    }
+  },
+
   "settingsPage": {
     "title": "Settings",
     "language": {

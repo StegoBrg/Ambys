@@ -227,7 +227,9 @@ function ReportViewer(props: Props) {
                 const sum = getAttributeSum(av.attributeName, dailyNotes);
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Sum</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.sum')}
+                    </h2>
                     <p>{sum}</p>
                   </Box>
                 );
@@ -238,14 +240,18 @@ function ReportViewer(props: Props) {
                 if (!min) {
                   return (
                     <Box key={index}>
-                      <h2>{av.attributeName} - Min</h2>
-                      <p>No valid values found</p>
+                      <h2>
+                        {av.attributeName} - {t('reportsPage.min')}
+                      </h2>
+                      <p>{t('reportsPage.noValidValues')}</p>
                     </Box>
                   );
                 }
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Min</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.min')}
+                    </h2>
                     <p>
                       {min.date.toDateString()} - {min.value}
                     </p>
@@ -258,14 +264,18 @@ function ReportViewer(props: Props) {
                 if (!max) {
                   return (
                     <Box key={index}>
-                      <h2>{av.attributeName} - Max</h2>
-                      <p>No valid values found</p>
+                      <h2>
+                        {av.attributeName} - {t('reportsPage.max')}
+                      </h2>
+                      <p>{t('reportsPage.noValidValues')}</p>
                     </Box>
                   );
                 }
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Max</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.max')}
+                    </h2>
                     <p>
                       {max.date.toDateString()} - {max.value}
                     </p>
@@ -281,14 +291,18 @@ function ReportViewer(props: Props) {
                 if (!average) {
                   return (
                     <Box key={index}>
-                      <h2>{av.attributeName} - Average</h2>
-                      <p>No valid values found</p>
+                      <h2>
+                        {av.attributeName} - {t('reportsPage.avg')}
+                      </h2>
+                      <p>{t('reportsPage.noValidValues')}</p>
                     </Box>
                   );
                 }
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Average</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.avg')}
+                    </h2>
                     <p>{average}</p>
                   </Box>
                 );
@@ -302,14 +316,18 @@ function ReportViewer(props: Props) {
                 if (!aggregate) {
                   return (
                     <Box key={index}>
-                      <h2>{av.attributeName} - Aggregate</h2>
-                      <p>No valid values found</p>
+                      <h2>
+                        {av.attributeName} - {t('reportsPage.aggregate')}
+                      </h2>
+                      <p>{t('reportsPage.noValidValues')}</p>
                     </Box>
                   );
                 }
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Aggregate</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.aggregate')}
+                    </h2>
                     {aggregate.map((item, idx) => (
                       <p key={idx}>
                         {item.value} - {item.count}
@@ -335,7 +353,9 @@ function ReportViewer(props: Props) {
 
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Line Chart</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.lineChart')}
+                    </h2>
                     <LineChart
                       h={300}
                       data={allAttributesStringDates}
@@ -355,14 +375,18 @@ function ReportViewer(props: Props) {
                 if (!allAttributes) {
                   return (
                     <Box key={index}>
-                      <h2>{av.attributeName} - Show All</h2>
-                      <p>No valid values found</p>
+                      <h2>
+                        {av.attributeName} - {t('reportsPage.showAll')}
+                      </h2>
+                      <p>{t('reportsPage.noValidValues')}</p>
                     </Box>
                   );
                 }
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Show All</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.showAll')}
+                    </h2>
                     {allAttributes.map((item, idx) => (
                       <p key={idx}>
                         {item.date.toDateString()} - {item.value}
@@ -381,16 +405,20 @@ function ReportViewer(props: Props) {
                 if (!allAttributesWithFilter) {
                   return (
                     <Box key={index}>
-                      <h2>{av.attributeName} - Show All with Filter</h2>
-                      <p>No valid values found</p>
+                      <h2>
+                        {av.attributeName} - {t('reportsPage.showAllFilter')}
+                      </h2>
+                      <p>{t('reportsPage.noValidValues')}</p>
                     </Box>
                   );
                 }
                 return (
                   <Box key={index}>
-                    <h2>{av.attributeName} - Show All with Filter</h2>
+                    <h2>
+                      {av.attributeName} - {t('reportsPage.showAllFilter')}
+                    </h2>
                     <p>
-                      <strong>Filter:</strong>{' '}
+                      <strong>{t('reportsPage.filter')}:</strong>{' '}
                       {av.filter
                         ? av.filter.clauses
                             .map(
@@ -577,7 +605,7 @@ function ReportViewer(props: Props) {
           {props.healthReport.additionalNotes && (
             <>
               <Title order={3} mt='md'>
-                Additional Notes
+                {t('reportsPage.additionalNotes')}
               </Title>
               <Paper mt='md'>{props.healthReport.additionalNotes}</Paper>
             </>

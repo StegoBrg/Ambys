@@ -27,11 +27,11 @@ function DeleteConfirmationModal(props: Props) {
     <Modal
       opened={props.opened}
       onClose={props.onClose}
-      title='Confirm Delete'
+      title={t('reportsPage.deleteConfirmModal.title')}
       centered
     >
       <Alert color='red' variant='light'>
-        Do you really want to delete? This cannot be undone!
+        {t('reportsPage.deleteConfirmModal.confirmText')}
       </Alert>
 
       <Group gap={12} mt='lg'>
