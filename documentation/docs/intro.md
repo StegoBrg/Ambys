@@ -17,6 +17,7 @@ This is my first ever open source project. I have built small web apps before bu
 - **Diary:** Create your own attributes and track them daily. View them in a list or calendar view.
 - **Public and Private Notebooks:** Create notebooks shared across the instance or just for yourself.
 - **Medication Plan:** Always keep track of what medication to take and keep a history of it.
+- **Health Reports** Visualize your data over a period of time.
 - **Multiple Users:** Create multiple users for each user using the instance. Keep in mind that the database is not encrypted so data could be read across users.
 - **Personal Access Tokens:** Integrate the API in your own services.
 - **Internationalization (i18n):** Supports both English and German at the moment.
