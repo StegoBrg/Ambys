@@ -41,7 +41,7 @@ namespace HealthJournal_API.Controllers
             var healthReportConfig = await healthReportConfigRepository.GetHealthReportConfigAsync(id);
             if (healthReportConfig == null) return NotFound();
 
-            return Ok(mapper.Map<MedicationPlanEntryDTO>(healthReportConfig));
+            return Ok(mapper.Map<HealthReportConfigDTO>(healthReportConfig));
         }
 
         [HttpPost]
