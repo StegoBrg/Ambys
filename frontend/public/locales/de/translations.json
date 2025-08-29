@@ -107,6 +107,7 @@
     "calendar": "Kalender",
     "notebooks": "Notizbücher",
     "medications": "Medikamente",
+    "reports": "Gesundheitsberichte",
     "settings": "Einstellungen"
   },
 
@@ -301,6 +302,46 @@
         "deleteButton": "Dauerhaft löschen",
         "cancelButton": "Abbrechen"
       }
+    }
+  },
+
+  "reportsPage": {
+    "headerDailyNotesCount": "Anzahl Tagebucheinträge:",
+    "noValidValues": "Keine gültigen Werte gefunden!",
+    "sum": "Summe",
+    "min": "Min",
+    "max": "Max",
+    "avg": "Durchschnitt",
+    "aggregate": "Gruppieren",
+    "lineChart": "Liniendiagramm",
+    "showAll": "Alle anzeigen",
+    "showAllFilter": "Alle anzeigen mit Filter",
+    "filter": "Filter",
+    "additionalNotes": "Sonstige Notizen",
+
+    "deleteConfirmModal": {
+      "title": "Löschen bestätigen",
+      "confirmText": "Willst du den Bericht wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
+    },
+
+    "addModal": {
+      "healthReport": "Gesundheitsbericht",
+      "title": "Neuen Bericht erstellen",
+      "reportName": "Berichtsname",
+      "folderLabel": "Ordner",
+      "folderDesc": "Ordner, getrennt durch '/‘ (z.B. '2024/Januar‘)",
+      "folderErr": "Der Ordnerpfad darf nicht mit einem \"/\" beginnen oder enden.",
+      "startDate": "Anfangsdatum",
+      "endDate": "Enddatum",
+      "attribute": "Attribut",
+      "visualization": "Visualisierung",
+      "calendarView": "Kalenderansicht",
+      "colorCodeCalendar": "Farblich hervorheben im Kalender",
+      "includeMedicationList": "Medikationsliste einbeziehen",
+      "additionalNotes": "Sonstige Notizen",
+      "notesPlaceholder": "Geben Sie zusätzliche Anmerkungen zum Bericht ein...",
+      "previewReport": "Vorschau Bericht",
+      "cancel": "Abbrechen"
     }
   },
 

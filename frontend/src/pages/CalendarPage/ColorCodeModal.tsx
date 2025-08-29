@@ -18,9 +18,9 @@ import {
   FilterOperators,
   ColorCodeConfiguration,
   LogicGate,
-  NoteConfiguration,
+  NoteAttribute,
 } from '../../Types';
-import { useLocalStorage, useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { IoAdd } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
@@ -28,8 +28,11 @@ import { useTranslation } from 'react-i18next';
 interface Props {
   opened: boolean;
   onClose: () => void;
+  onSave: (config: ColorCodeConfiguration) => void;
+  onReset: () => void;
 
-  noteConfig: NoteConfiguration;
+  allAttributes: NoteAttribute[];
+  colorCodeConfig?: ColorCodeConfiguration;
 }
 
 function ColorCodeModal(props: Props) {
@@ -50,29 +53,18 @@ function ColorCodeModal(props: Props) {
     },
   ];
 
-  const allAttributeNames = props.noteConfig.noteAttributes.map(
-    (attr) => attr.name
-  );
-
-  const [
-    colorCodeConfigStorage,
-    setColorCodeConfigStorage,
-    removeColorCodeConfigStorage,
-  ] = useLocalStorage<ColorCodeConfiguration | undefined>({
-    key: 'color-code-config',
-  });
+  const allAttributeNames = props.allAttributes.map((attr) => attr.name);
 
   const [colorCodeConfig, setColorCodeConfig] =
-    useState<ColorCodeConfiguration>(defaultConfig);
+    useState<ColorCodeConfiguration>(props.colorCodeConfig ?? defaultConfig);
 
   useEffect(() => {
-    if (colorCodeConfigStorage !== undefined)
-      setColorCodeConfig(colorCodeConfigStorage);
-  }, [colorCodeConfigStorage]);
+    if (props.colorCodeConfig) setColorCodeConfig(props.colorCodeConfig);
+  }, [props.colorCodeConfig]);
 
   function saveColorCoding() {
     // Saves the color coding configuration to the local storage.
-    setColorCodeConfigStorage(colorCodeConfig);
+    props.onSave(colorCodeConfig);
     props.onClose();
   }
 
@@ -323,8 +315,8 @@ function ColorCodeModal(props: Props) {
         variant='subtle'
         color='red'
         onClick={() => {
-          removeColorCodeConfigStorage();
           setColorCodeConfig(defaultConfig);
+          props.onReset();
           props.onClose();
         }}
       >

@@ -19,6 +19,7 @@ namespace HealthJournal_API.Models
         public DbSet<Medication> Medications { get; set; }
         public DbSet<MedicationPlanEntry> MedicationPlanEntries { get; set; }
         public DbSet<MedicationSchedule> MedicationSchedules { get; set; }
+        public DbSet<HealthReportConfig> HealthReportConfigs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -33,6 +34,21 @@ namespace HealthJournal_API.Models
                 .WithMany(p => p.Subpages)
                 .HasForeignKey(p => p.ParentId)
                 .OnDelete(DeleteBehavior.Cascade); // Delete Subpages when Parent Page is deleted
+
+            modelBuilder.Entity<HealthReportConfig>(config =>
+            {
+                config.OwnsMany(h => h.AttributesVisualizations, av =>
+                {
+                    av.WithOwner();
+                    av.OwnsOne(a => a.Filter); // Filter is nullable
+                });
+
+                config.OwnsMany(h => h.ColorCodeConfig, cc =>
+                {
+                    cc.WithOwner();
+                    cc.OwnsMany(c => c.Clauses);
+                });
+            });
         }
     }
 }

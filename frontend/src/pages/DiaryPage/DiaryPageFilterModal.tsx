@@ -16,9 +16,9 @@ import {
   FilterOperators,
   DiaryFilterConfiguration,
   LogicGate,
-  NoteConfiguration,
+  NoteAttribute,
 } from '../../Types';
-import { useLocalStorage, useMediaQuery } from '@mantine/hooks';
+import { useMediaQuery } from '@mantine/hooks';
 import { useEffect, useState } from 'react';
 import { IoAdd } from 'react-icons/io5';
 import { useTranslation } from 'react-i18next';
@@ -26,8 +26,12 @@ import { useTranslation } from 'react-i18next';
 interface Props {
   opened: boolean;
   onClose: () => void;
+  onSave: (filter: DiaryFilterConfiguration) => void;
+  onReset: () => void;
 
-  noteConfig: NoteConfiguration;
+  forcedElement?: string; // Sets the element to a specific value. This is used for the diary filter in the reports page.
+  allAttributes: NoteAttribute[];
+  diaryFilter?: DiaryFilterConfiguration;
 }
 
 function DiaryPageFilterModal(props: Props) {
@@ -38,31 +42,28 @@ function DiaryPageFilterModal(props: Props) {
     logicGate: 'AND',
     clauses: [
       {
-        element: '',
+        element: props.forcedElement ?? '',
         operator: '',
         value: '',
       },
     ],
   };
-  const allAttributeNames = props.noteConfig.noteAttributes.map(
-    (attr) => attr.name
+  const allAttributeNames = props.allAttributes.map((attr) => attr.name);
+
+  const [diaryFilter, setDiaryFilter] = useState<DiaryFilterConfiguration>(
+    props.diaryFilter ?? defaultConfig
   );
 
-  const [diaryFilterStorage, setDiaryFilterStorage, removeDiaryFilterStorage] =
-    useLocalStorage<DiaryFilterConfiguration | undefined>({
-      key: 'diary-filter',
-    });
-
-  const [diaryFilter, setDiaryFilter] =
-    useState<DiaryFilterConfiguration>(defaultConfig);
-
   useEffect(() => {
-    if (diaryFilterStorage !== undefined) setDiaryFilter(diaryFilterStorage);
-  }, [diaryFilterStorage]);
+    // If the diaryFilter prop changes, update the local state.
+    if (props.diaryFilter) {
+      setDiaryFilter(props.diaryFilter);
+    }
+  }, [props.diaryFilter]);
 
   function saveDiaryFilter() {
     // Saves the color coding configuration to the local storage.
-    setDiaryFilterStorage(diaryFilter);
+    props.onSave(diaryFilter);
     props.onClose();
   }
 
@@ -121,12 +122,13 @@ function DiaryPageFilterModal(props: Props) {
                             items: allAttributeNames,
                           },
                         ]}
-                        value={clause.element}
+                        value={props.forcedElement ?? clause.element}
                         onChange={(e) => {
                           const filterTemp = structuredClone(diaryFilter);
                           filterTemp.clauses[clauseIndex].element = e ?? '';
                           setDiaryFilter(filterTemp);
                         }}
+                        disabled={props.forcedElement !== undefined}
                       />
                     </Table.Td>
                     <Table.Td>
@@ -231,8 +233,8 @@ function DiaryPageFilterModal(props: Props) {
         variant='subtle'
         color='red'
         onClick={() => {
-          removeDiaryFilterStorage();
           setDiaryFilter(defaultConfig);
+          props.onReset();
           props.onClose();
         }}
       >

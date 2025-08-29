@@ -3,6 +3,7 @@ using HealthJournal_API.Models.Domain;
 using HealthJournal_API.Models.DTO;
 using HealthJournal_API.Models.DTO.DailyNote;
 using HealthJournal_API.Models.DTO.DailyNoteAttribute;
+using HealthJournal_API.Models.DTO.HealthReportConfigs;
 using HealthJournal_API.Models.DTO.Medication;
 using HealthJournal_API.Models.DTO.MedicationPlanEntry;
 using HealthJournal_API.Models.DTO.NoteAttribute;
@@ -56,6 +57,13 @@ namespace HealthJournal_API.Mappings
             CreateMap<MedicationPlanEntry, MedicationPlanEntryDTO>().ReverseMap();
             CreateMap<AddMedicationPlanEntryDTO, MedicationPlanEntry>().ReverseMap();
             CreateMap<UpdateMedicationPlanEntryDTO, MedicationPlanEntry>().ReverseMap();
+
+            CreateMap<HealthReportConfig, HealthReportConfigDTO>().ReverseMap();
+            CreateMap<AddHealthReportConfigDTO, HealthReportConfig>().ReverseMap();
+            CreateMap<AttributeVisualization, AttributeVisualizationDTO>().ReverseMap();
+            CreateMap<ColorCodeConfiguration, ColorCodeConfigurationDTO>().ReverseMap();
+            CreateMap<DiaryFilterConfiguration, DiaryFilterConfigurationDTO>().ReverseMap();
+            CreateMap<FilterClause, FilterClauseDTO>().ReverseMap();
         }
     }
 }
