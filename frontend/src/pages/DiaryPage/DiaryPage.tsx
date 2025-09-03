@@ -73,8 +73,8 @@ function DiaryPage() {
 
     // Append start and endDate queries depending on viewMode
     if (viewMode === 'week') {
-      let startDate = startOfWeek(selectedWeek);
-      let endDate = endOfWeek(selectedWeek);
+      const startDate = startOfWeek(selectedWeek);
+      const endDate = endOfWeek(selectedWeek);
 
       apiUrlDailyNote =
         apiUrlDailyNote + `?startDate=${startDate}&endDate=${endDate}`;

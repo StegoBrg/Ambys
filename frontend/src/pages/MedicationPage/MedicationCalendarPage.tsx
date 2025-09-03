@@ -29,7 +29,7 @@ function MedicationCalendarPage() {
   const [dates, setDates] = useState<string[]>([]);
 
   useEffect(() => {
-    let startDate = startOfWeek(selectedWeek);
+    const startDate = startOfWeek(selectedWeek);
 
     const allDatesForWeek = [];
     for (let i = 0; i < 7; i++) {

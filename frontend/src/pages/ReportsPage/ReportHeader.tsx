@@ -16,22 +16,6 @@ function ReportHeader(props: Props) {
 
   const [fullName, setFullName] = useState('');
 
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
-
   useEffect(() => {
     axiosInstance.get<UserData>('Users/self').then((response) => {
       if (response.data.fullName) {
