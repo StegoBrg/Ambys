@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { HealthReport, HealthReportStringDates } from './Types';
+import { HealthReport } from './Types';
 import axiosInstance from '../../lib/axiosInstance';
 import {
   Card,
@@ -11,6 +11,8 @@ import {
   NavLink,
 } from '@mantine/core';
 import { TbFolder } from 'react-icons/tb';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
+import dayjs from 'dayjs';
 
 interface Props {
   onClick: (report: HealthReport) => void;
@@ -18,7 +20,7 @@ interface Props {
 
 interface FolderNode {
   folders: Record<string, FolderNode>;
-  reports: HealthReportStringDates[];
+  reports: HealthReport[];
 }
 
 interface FolderViewProps {
@@ -27,6 +29,8 @@ interface FolderViewProps {
 }
 
 function FolderView(props: FolderViewProps) {
+  const dateFormat = useUserSettings((state) => state.dateFormat);
+
   return (
     <>
       <Stack w='100%' maw={600} gap={'xs'}>
@@ -52,8 +56,8 @@ function FolderView(props: FolderViewProps) {
                         id: reportConfig.id,
                         name: reportConfig.name,
                         folder: reportConfig.folder,
-                        startDate: new Date(reportConfig.startDate),
-                        endDate: new Date(reportConfig.endDate),
+                        startDate: reportConfig.startDate,
+                        endDate: reportConfig.endDate,
                         attributesVisualizations:
                           reportConfig.attributesVisualizations,
                         colorCodeConfig: reportConfig.colorCodeConfig,
@@ -69,8 +73,8 @@ function FolderView(props: FolderViewProps) {
                     <Group>
                       <Text fw={500}>{reportConfig.name}</Text>
                       <Text size='sm' c='dimmed'>
-                        {new Date(reportConfig.startDate).toLocaleDateString()}{' '}
-                        ➤ {new Date(reportConfig.endDate).toLocaleDateString()}
+                        {dayjs(reportConfig.startDate).format(dateFormat)} ➤{' '}
+                        {dayjs(reportConfig.endDate).format(dateFormat)}
                       </Text>
                     </Group>
                   </Card>
@@ -88,13 +92,11 @@ function FolderView(props: FolderViewProps) {
 }
 
 function ReportOverview(props: Props) {
-  const [allReportConfigs, setAllReportsConfigs] = useState<
-    HealthReportStringDates[]
-  >([]);
+  const [allReportConfigs, setAllReportsConfigs] = useState<HealthReport[]>([]);
 
   useEffect(() => {
     axiosInstance
-      .get<HealthReportStringDates[]>('HealthReportConfigs')
+      .get<HealthReport[]>('HealthReportConfigs')
       .then((response) => {
         setAllReportsConfigs(response.data);
       });

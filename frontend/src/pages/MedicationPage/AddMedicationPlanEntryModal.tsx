@@ -11,10 +11,12 @@ import {
   Checkbox,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Medication } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   opened: boolean;
@@ -26,24 +28,12 @@ interface Props {
 
 function AddMedicationPlanEntryModal(props: Props) {
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
-
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<string>(
+    dayjs().format('YYYY-MM-DD')
+  );
+  const [endDate, setEndDate] = useState<string | null>(null);
   const [medication, setMedication] = useState<Medication | null>(null);
   const [dosage, setDosage] = useState<string>('');
   const [isAsNeeded, setIsAsNeeded] = useState<boolean>(false);
@@ -62,26 +52,12 @@ function AddMedicationPlanEntryModal(props: Props) {
       return;
     }
 
-    // Deal with time zone issues.
-    const offsetStart = startDate.getTimezoneOffset();
-    const startDateDate = new Date(
-      startDate.getTime() - offsetStart * 60 * 1000
-    );
-    const startDateString: string = startDateDate.toISOString().split('T')[0];
-
-    let endDateString: string | null = null;
-    if (endDate) {
-      const offsetEnd = endDate.getTimezoneOffset();
-      const endDateDate = new Date(endDate.getTime() - offsetEnd * 60 * 1000);
-      endDateString = endDateDate.toISOString().split('T')[0];
-    }
-
     axiosInstance
       .post('/MedicationPlanEntries', {
         medicationId: medication.id,
         dosage: dosage,
-        startDate: startDateString,
-        endDate: endDateString,
+        startDate: startDate,
+        endDate: endDate,
         isAsNeeded: isAsNeeded,
         schedule: isAsNeeded
           ? null
@@ -98,7 +74,7 @@ function AddMedicationPlanEntryModal(props: Props) {
       .then(() => {
         props.onSave();
         // Reset all fields
-        setStartDate(new Date());
+        setStartDate(dayjs().format('YYYY-MM-DD'));
         setEndDate(null);
         setMedication(null);
         setDosage('');
@@ -126,7 +102,7 @@ function AddMedicationPlanEntryModal(props: Props) {
             withAsterisk
             highlightToday
             value={startDate}
-            locale={locale}
+            valueFormat={dateFormat}
             onChange={(e) => {
               if (e) setStartDate(e);
             }}
@@ -136,7 +112,7 @@ function AddMedicationPlanEntryModal(props: Props) {
             placeholder={''}
             highlightToday
             value={endDate}
-            locale={locale}
+            valueFormat={dateFormat}
             onChange={(e) => {
               if (e) setEndDate(e);
             }}

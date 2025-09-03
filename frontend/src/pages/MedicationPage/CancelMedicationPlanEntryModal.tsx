@@ -1,9 +1,11 @@
 import { Modal, Stack, Group, Button, Textarea, Alert } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MedicationPlanEntry } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   opened: boolean;
@@ -15,38 +17,20 @@ interface Props {
 
 function CancelMedicationPlanEntryModal(props: Props) {
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
-
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [stoppedReason, setStoppedReason] = useState<string>('');
 
   function cancelMedicationPlanEntry() {
     const medicationPlanEntryToUpdate = props.medicationPlanEntryToCancel;
 
-    const offsetEnd = endDate.getTimezoneOffset();
-    const endDateDate = new Date(endDate.getTime() - offsetEnd * 60 * 1000);
-    const endDateString: string = endDateDate.toISOString().split('T')[0];
-
-    medicationPlanEntryToUpdate.endDate = endDateString;
+    medicationPlanEntryToUpdate.endDate = endDate;
     medicationPlanEntryToUpdate.stoppedReason = stoppedReason;
 
     axiosInstance
       .put(`/MedicationPlanEntries/${props.medicationPlanEntryToCancel.id}`, {
-        endDate: endDateString,
+        endDate: endDate,
         notes: medicationPlanEntryToUpdate.notes,
         stoppedReason: stoppedReason,
       })
@@ -70,7 +54,7 @@ function CancelMedicationPlanEntryModal(props: Props) {
           label={t('medicationsPage.medicationPlan.endDate')}
           withAsterisk
           value={endDate}
-          locale={locale}
+          valueFormat={dateFormat}
           onChange={(e) => {
             if (e) {
               setEndDate(e);

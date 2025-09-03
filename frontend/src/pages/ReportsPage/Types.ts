@@ -21,18 +21,6 @@ type HealthReport = {
   id?: number;
   name: string;
   folder: string;
-  startDate: Date;
-  endDate: Date;
-  attributesVisualizations: AttributeVisualization[];
-  colorCodeConfig?: ColorCodeConfiguration;
-  includeMedicationList: boolean;
-  additionalNotes?: string;
-};
-
-type HealthReportStringDates = {
-  id?: number;
-  name: string;
-  folder: string;
   startDate: string;
   endDate: string;
   attributesVisualizations: AttributeVisualization[];
@@ -45,5 +33,4 @@ export type {
   VisualizationType,
   AttributeVisualization,
   HealthReport,
-  HealthReportStringDates,
 };

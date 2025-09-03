@@ -1,41 +1,31 @@
 import dayjs from 'dayjs';
 
-function getDay(date: Date) {
-  const day = date.getDay();
+function getDay(date: string) {
+  const day = dayjs(date).day();
   return day === 0 ? 6 : day - 1;
 }
 
-function startOfWeek(date: Date) {
-  return new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate() - getDay(date) - 1
-  );
+function startOfWeek(date: string) {
+  return dayjs(date)
+    .subtract(getDay(date), 'day')
+    .format('YYYY-MM-DD');
 }
 
-function endOfWeek(date: Date) {
-  return dayjs(
-    new Date(
-      date.getFullYear(),
-      date.getMonth(),
-      date.getDate() + (6 - getDay(date))
-    )
-  )
-    .endOf('date')
-    .toDate();
+function endOfWeek(date: string) {
+  return dayjs(date)
+    .add(6 - getDay(date), 'day')
+    .endOf('day')
+    .format('YYYY-MM-DD');
 }
 
-function isInWeekRange(date: Date, value: Date | null) {
-  return value
-    ? dayjs(date).isBefore(endOfWeek(value)) &&
-        dayjs(date).isAfter(startOfWeek(value))
-    : false;
+function isInWeekRange(date: string, value: string | null) {
+  if (!value) return false;
+
+  const d = dayjs(date);
+  const start = startOfWeek(value);
+  const end = endOfWeek(value);
+
+  return (d.isSame(start) || d.isAfter(start)) && (d.isSame(end) || d.isBefore(end));
 }
 
-function addDays(date: Date, days: number) {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
-export { getDay, startOfWeek, endOfWeek, isInWeekRange, addDays };
+export { getDay, startOfWeek, endOfWeek, isInWeekRange };

@@ -1,33 +1,18 @@
 import { Group, ActionIcon, Button, Popover } from '@mantine/core';
 import { MonthPicker } from '@mantine/dates';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
+import i18n from '../../i18n';
 
 interface Props {
-  selectedMonth: Date;
-  onSelectedMonthChange: (newDate: Date) => void;
+  selectedMonth: string;
+  onSelectedMonthChange: (newDate: string) => void;
 }
 
 function MonthPickerComponent(props: Props) {
-  const { t } = useTranslation();
-
   const [selectedMonth, setSelectedMonth] = useState(props.selectedMonth);
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
+  const locale = i18n.language;
 
   // Call onChange method from props every time internal state changes.
   useEffect(() => {
@@ -40,22 +25,19 @@ function MonthPickerComponent(props: Props) {
         variant='subtle'
         size='lg'
         onClick={() => {
-          const selectedMonthTemp = new Date(selectedMonth);
-          selectedMonthTemp.setMonth(selectedMonthTemp.getMonth() - 1);
+          const selectedMonthTemp = dayjs(selectedMonth)
+            .subtract(1, 'month')
+            .format('YYYY-MM-DD');
           setSelectedMonth(selectedMonthTemp);
         }}
       >
         <TbChevronLeft size={30} />
       </ActionIcon>
 
-      <Popover
-      >
+      <Popover>
         <Popover.Target>
           <Button variant='subtle' color='gray'>
-            {selectedMonth.toLocaleString(locale ?? 'en', {
-              month: 'long',
-            })}{' '}
-            {selectedMonth.getFullYear().toString()}
+            {dayjs(selectedMonth).locale(locale).format('MMMM YYYY')}
           </Button>
         </Popover.Target>
         <Popover.Dropdown>
@@ -75,8 +57,9 @@ function MonthPickerComponent(props: Props) {
         variant='subtle'
         size='lg'
         onClick={() => {
-          const selectedMonthTemp = new Date(selectedMonth);
-          selectedMonthTemp.setMonth(selectedMonthTemp.getMonth() + 1);
+          const selectedMonthTemp = dayjs(selectedMonth)
+            .add(1, 'month')
+            .format('YYYY-MM-DD');
           setSelectedMonth(selectedMonthTemp);
         }}
       >

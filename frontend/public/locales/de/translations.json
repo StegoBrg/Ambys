@@ -139,12 +139,6 @@
       },
       "saveButton": "Speichern",
       "cancelButton": "Abbrechen",
-
-      "dates": {
-        "format": "DD.MM.YYYY",
-        "dayjsLocale": "de"
-      },
-
       "unsavedChanges": "Ungespeicherte Änderungen"
     }
   },
@@ -350,6 +344,10 @@
     "language": {
       "title": "Sprache",
       "description": "Attribute werden nicht übersetzt."
+    },
+    "dateFormat": {
+      "title": "Datumsformat",
+      "description": "Wähle aus, wie Daten angezeigt werden."
     },
     "save": "Speichern",
 

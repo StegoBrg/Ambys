@@ -14,6 +14,7 @@ import {
   NavLink,
   useMantineColorScheme,
   Box,
+  Space,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useEffect, useState } from 'react';
@@ -38,6 +39,8 @@ import { IoAdd } from 'react-icons/io5';
 import _ from 'lodash';
 import { notifications } from '@mantine/notifications';
 import axiosInstance from '../../lib/axiosInstance';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
+import dayjs from 'dayjs';
 
 function SettingsPage() {
   const { t, i18n } = useTranslation();
@@ -46,9 +49,7 @@ function SettingsPage() {
 
   const [currCategory, setCurrCategory] = useState<SettingsCategory>('general');
 
-  const [language, setLanguage] = useState<string>(
-    i18n.language === 'en' ? 'English' : 'Deutsch'
-  );
+  const [language, setLanguage] = useState<string>(i18n.language);
 
   const [noteConfigId, setNoteConfigId] = useState<number>(-1);
   const [noteAttributes, setNoteAttributes] = useState<NoteAttribute[]>([]);
@@ -87,17 +88,6 @@ function SettingsPage() {
       setNoteConfigSaveEnabled(true);
     }
   }, [initialConfigAttributes, noteConfigAttributes]);
-
-  function changeLanguage() {
-    switch (language) {
-      case 'Deutsch':
-        i18n.changeLanguage('de');
-        break;
-      case 'English':
-        i18n.changeLanguage('en');
-        break;
-    }
-  }
 
   function getAllAttributes() {
     axiosInstance
@@ -248,6 +238,22 @@ function SettingsPage() {
       });
   }
 
+  const languageOptions = [
+    { value: 'en', label: 'English' },
+    { value: 'de', label: 'Deutsch' },
+  ];
+
+  const { dateFormat, setDateFormat } = useUserSettings();
+
+  const dateOptions = [
+    { value: 'YYYY-MM-DD', label: dayjs().format('YYYY-MM-DD') },
+    { value: 'DD.MM.YYYY', label: dayjs().format('DD.MM.YYYY') },
+    { value: 'DD.MM.YY', label: dayjs().format('DD.MM.YY') },
+    { value: 'MM/DD/YY', label: dayjs().format('MM/DD/YY') },
+    { value: 'DD MMM YYYY', label: dayjs().format('DD MMM YYYY') },
+    { value: 'MMM DD, YYYY', label: dayjs().format('MMM DD, YYYY') },
+  ];
+
   return (
     <>
       <Center mt='2rem'>
@@ -271,14 +277,27 @@ function SettingsPage() {
               <Select
                 label={t('settingsPage.language.title')}
                 description={t('settingsPage.language.description')}
-                data={['Deutsch', 'English']}
+                data={languageOptions}
                 value={language}
-                onChange={(_value) => setLanguage(_value ?? i18n.language)}
+                onChange={(_value) => {
+                  if (_value) {
+                    i18n.changeLanguage(_value);
+                    setLanguage(_value);
+                  }
+                }}
               />
 
-              <Button mt='2rem' onClick={() => changeLanguage()}>
-                {t('settingsPage.save')}
-              </Button>
+              <Space h='md' />
+
+              <Select
+                label={t('settingsPage.dateFormat.title')}
+                description={t('settingsPage.dateFormat.description')}
+                data={dateOptions}
+                value={dateFormat}
+                onChange={(e) => {
+                  if (e) setDateFormat(e);
+                }}
+              />
             </Paper>
           )}
 

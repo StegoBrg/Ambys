@@ -5,6 +5,8 @@ import MedicationCalendarDay from './MedicationCalendarDay';
 import { useMediaQuery } from '@mantine/hooks';
 import { startOfWeek } from '../DiaryPage/WeekPickerUtils';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 const weekDayKeys = [
   'monday',
@@ -19,45 +21,23 @@ const weekDayKeys = [
 function MedicationCalendarPage() {
   const { t } = useTranslation();
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
-  const [selectedWeek, setSelectedWeek] = useState(new Date());
-  const [dates, setDates] = useState<Date[]>([]);
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
+  const [selectedWeek, setSelectedWeek] = useState<string>(
+    dayjs().format('YYYY-MM-DD')
+  );
+  const [dates, setDates] = useState<string[]>([]);
 
   useEffect(() => {
-    let startDate = startOfWeek(selectedWeek);
-
-    // Deal with time zone issues.
-    const offsetStart = startDate.getTimezoneOffset();
-    startDate = new Date(startDate.getTime() - offsetStart * 60 * 1000);
+    const startDate = startOfWeek(selectedWeek);
 
     const allDatesForWeek = [];
-    for (let i = 1; i <= 7; i++) {
-      allDatesForWeek.push(addDays(startDate, i));
+    for (let i = 0; i < 7; i++) {
+      allDatesForWeek.push(dayjs(startDate).add(i, 'day').format('YYYY-MM-DD'));
     }
 
     setDates(allDatesForWeek);
   }, [selectedWeek]);
-
-  function addDays(date: Date, days: number) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
 
   return (
     <>
@@ -73,8 +53,8 @@ function MedicationCalendarPage() {
           {dates.map((date, index) => (
             <Paper withBorder p={5} key={index}>
               <Text size='lg'>
-                {t(`days.${weekDayKeys[index]}`)},{' '}
-                {date.toLocaleDateString(locale)}
+                {t(`days.${weekDayKeys[index]}`)}:{' '}
+                {dayjs(date).format(dateFormat)}
               </Text>
               <MedicationCalendarDay date={date} />
             </Paper>

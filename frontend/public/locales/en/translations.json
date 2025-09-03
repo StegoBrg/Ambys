@@ -139,12 +139,6 @@
       },
       "saveButton": "Save",
       "cancelButton": "Cancel",
-
-      "dates": {
-        "format": "MM/DD/YYYY",
-        "dayjsLocale": "en"
-      },
-
       "unsavedChanges": "Unsaved Changes"
     }
   },
@@ -350,6 +344,10 @@
     "language": {
       "title": "Language",
       "description": "This will not affect your note attributes."
+    },
+    "dateFormat": {
+      "title": "Date Format",
+      "description": "Select how dates are displayed."
     },
     "save": "Save",
 

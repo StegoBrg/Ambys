@@ -43,6 +43,8 @@ import { TbAsterisk } from 'react-icons/tb';
 import _ from 'lodash';
 import axiosInstance from '../../lib/axiosInstance';
 import { IoAdd } from 'react-icons/io5';
+import i18n from '../../i18n';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 type State = 'create' | 'edit' | 'show';
 
@@ -55,7 +57,7 @@ interface Props {
   margin?: number;
   padding?: number;
   disableDateEdit?: boolean;
-  dateOnCreate?: Date;
+  dateOnCreate?: string;
 
   // This prop is not needed if a new entry is created.
   dailyNote?: DailyNote;
@@ -69,17 +71,21 @@ function DiaryEntry(props: Props) {
   const theme = useMantineTheme();
   const isDarkTheme = useMantineColorScheme().colorScheme === 'dark';
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+  const locale = i18n.language;
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [state, setState] = useState<State>(props.state);
 
   const [datePickerOpen, setDatePickerOpen] = useState<boolean>(false);
 
   const initialDateCreate =
-    props.dateOnCreate !== undefined ? props.dateOnCreate : new Date();
+    props.dateOnCreate !== undefined
+      ? props.dateOnCreate
+      : dayjs().format('YYYY-MM-DD');
 
-  const [selectedDate, setSelectedDate] = useState<Date>(
+  const [selectedDate, setSelectedDate] = useState<string>(
     props.dailyNote?.date !== undefined
-      ? new Date(props.dailyNote.date)
+      ? props.dailyNote.date
       : initialDateCreate
   );
   const [initialDate, setInitialDate] = useState(selectedDate);
@@ -239,17 +245,9 @@ function DiaryEntry(props: Props) {
   function createNewEntry() {
     const apiUrl = 'DailyNotes';
 
-    let selectedDateTemp = selectedDate;
-
-    // Deal with time zone issues.
-    const offset = selectedDateTemp.getTimezoneOffset();
-    selectedDateTemp = new Date(
-      selectedDateTemp.getTime() - offset * 60 * 1000
-    );
-
     const newEntry: DailyNote = {
       id: 0,
-      date: selectedDateTemp.toISOString().split('T')[0],
+      date: selectedDate,
       attributes: attributes ?? [],
     };
 
@@ -307,17 +305,9 @@ function DiaryEntry(props: Props) {
 
     const apiUrl = `DailyNotes/${props.dailyNote.id}`;
 
-    let selectedDateTemp = selectedDate;
-
-    // Deal with time zone issues.
-    const offset = selectedDateTemp.getTimezoneOffset();
-    selectedDateTemp = new Date(
-      selectedDateTemp.getTime() - offset * 60 * 1000
-    );
-
     const editedEntry: DailyNote = {
       id: props.dailyNote.id,
-      date: selectedDateTemp.toISOString().split('T')[0],
+      date: selectedDate,
       attributes: attributes ?? [],
     };
 
@@ -406,20 +396,18 @@ function DiaryEntry(props: Props) {
                       padding: '0.5rem',
                     }}
                   >
-                    {dayjs(selectedDate).format(
-                      t('diaryPage.diaryEntry.dates.format')
-                    )}
+                    {dayjs(selectedDate).format(dateFormat)}
                   </Box>
                 </Popover.Target>
                 <Popover.Dropdown ref={popoverRef}>
                   <DatePicker
                     value={selectedDate}
                     onChange={(e) => {
-                      setSelectedDate(e as Date);
+                      if (e != null) setSelectedDate(e);
                       setDatePickerOpen(false);
                     }}
                     size='lg'
-                    locale={t('diaryPage.diaryEntry.dates.dayjsLocale')}
+                    locale={locale}
                     highlightToday
                   />
                 </Popover.Dropdown>

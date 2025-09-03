@@ -1,6 +1,7 @@
 import { Center, Paper, Title } from '@mantine/core';
 import MedicationCalendarDay from '../MedicationPage/MedicationCalendarDay';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 function Homepage() {
   const { t } = useTranslation();
@@ -12,7 +13,7 @@ function Homepage() {
           {t('homepage.medicationTitle')}
         </Title>
 
-        <MedicationCalendarDay date={new Date()} />
+        <MedicationCalendarDay date={dayjs().format('YYYY-MM-DD')} />
       </Paper>
     </Center>
   );

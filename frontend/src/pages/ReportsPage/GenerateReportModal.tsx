@@ -30,6 +30,8 @@ import { TbEdit, TbFilter, TbX } from 'react-icons/tb';
 import { useMediaQuery } from '@mantine/hooks';
 import DiaryPageFilterModal from '../DiaryPage/DiaryPageFilterModal';
 import ColorCodeModal from '../CalendarPage/ColorCodeModal';
+import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   opened: boolean;
@@ -40,42 +42,23 @@ interface Props {
 function GenerateReportModal(props: Props) {
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [reportName, setReportName] = useState<string>(
-    `${t('reportsPage.addModal.healthReport')} - ` +
-      new Date().toLocaleDateString(locale)
+    `${t('reportsPage.addModal.healthReport')} - ` + dayjs().format(dateFormat)
   );
 
-  useEffect(() => {
-    // Update the report name when the locale changes
-    setReportName(
-      `${t('reportsPage.addModal.healthReport')} - ` +
-        new Date().toLocaleDateString(locale)
-    );
-  }, [locale]);
-
-  const [folder, setFolder] = useState<string>('');
+  const [folder, setFolder] = useState<string>('Default');
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-  const [startDate, setStartDate] = useState<Date>(oneMonthAgo);
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<string>(
+    dayjs(dayjs().format('YYYY-MM-DD'))
+      .subtract(1, 'month')
+      .format('YYYY-MM-DD')
+  );
+  const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
 
   const [allAttributes, setAllAttributes] = useState<NoteAttribute[]>([]);
   const [allAttributeNames, setAllAttributeNames] = useState<string[]>([]);
@@ -170,7 +153,7 @@ function GenerateReportModal(props: Props) {
           label={t('reportsPage.addModal.startDate')}
           withAsterisk
           value={startDate}
-          locale={locale}
+          valueFormat={dateFormat}
           onChange={(e) => {
             if (e) {
               setStartDate(e);
@@ -182,7 +165,7 @@ function GenerateReportModal(props: Props) {
           label={t('reportsPage.addModal.endDate')}
           withAsterisk
           value={endDate}
-          locale={locale}
+          valueFormat={dateFormat}
           onChange={(e) => {
             if (e) {
               setEndDate(e);
