@@ -12,9 +12,7 @@ interface Props {
 
 function MonthPickerComponent(props: Props) {
   const [selectedMonth, setSelectedMonth] = useState(props.selectedMonth);
-
   const locale = i18n.language;
-  console.log(locale);
 
   // Call onChange method from props every time internal state changes.
   useEffect(() => {
