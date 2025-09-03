@@ -10,6 +10,7 @@ Documentation: https://ambys.org/
 Ambys is a self hosted health tracker with a RestAPI backend and a frontend built with React and Mantine. Take control over your health data with diaries, notebooks and medication plans. You can also use the API in isolation to integrate into your own services.
 
 ## Screenshots
+
 ![Screenshot diary](https://github.com/user-attachments/assets/3772013f-9d11-43a5-89d6-cb7f40309392)
 
 ![Screenshot medication](https://github.com/user-attachments/assets/0d06708f-aba0-4d8c-99da-92523d35b2e4)
@@ -19,6 +20,7 @@ Ambys is a self hosted health tracker with a RestAPI backend and a frontend buil
 - Diary
 - Public and Private Notebooks
 - Medication Plan
+- Health Reports
 - Multiple Users
 - Easy deployment with docker-compose
 
