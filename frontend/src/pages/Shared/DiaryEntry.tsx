@@ -55,7 +55,7 @@ interface Props {
   margin?: number;
   padding?: number;
   disableDateEdit?: boolean;
-  dateOnCreate?: Date;
+  dateOnCreate?: string;
 
   // This prop is not needed if a new entry is created.
   dailyNote?: DailyNote;
@@ -75,11 +75,13 @@ function DiaryEntry(props: Props) {
   const [datePickerOpen, setDatePickerOpen] = useState<boolean>(false);
 
   const initialDateCreate =
-    props.dateOnCreate !== undefined ? props.dateOnCreate : new Date();
+    props.dateOnCreate !== undefined
+      ? props.dateOnCreate
+      : dayjs().format('YYYY-MM-DD');
 
-  const [selectedDate, setSelectedDate] = useState<Date>(
+  const [selectedDate, setSelectedDate] = useState<string>(
     props.dailyNote?.date !== undefined
-      ? new Date(props.dailyNote.date)
+      ? props.dailyNote.date
       : initialDateCreate
   );
   const [initialDate, setInitialDate] = useState(selectedDate);
@@ -239,17 +241,9 @@ function DiaryEntry(props: Props) {
   function createNewEntry() {
     const apiUrl = 'DailyNotes';
 
-    let selectedDateTemp = selectedDate;
-
-    // Deal with time zone issues.
-    const offset = selectedDateTemp.getTimezoneOffset();
-    selectedDateTemp = new Date(
-      selectedDateTemp.getTime() - offset * 60 * 1000
-    );
-
     const newEntry: DailyNote = {
       id: 0,
-      date: selectedDateTemp.toISOString().split('T')[0],
+      date: selectedDate,
       attributes: attributes ?? [],
     };
 
@@ -307,17 +301,9 @@ function DiaryEntry(props: Props) {
 
     const apiUrl = `DailyNotes/${props.dailyNote.id}`;
 
-    let selectedDateTemp = selectedDate;
-
-    // Deal with time zone issues.
-    const offset = selectedDateTemp.getTimezoneOffset();
-    selectedDateTemp = new Date(
-      selectedDateTemp.getTime() - offset * 60 * 1000
-    );
-
     const editedEntry: DailyNote = {
       id: props.dailyNote.id,
-      date: selectedDateTemp.toISOString().split('T')[0],
+      date: selectedDate,
       attributes: attributes ?? [],
     };
 
@@ -415,7 +401,7 @@ function DiaryEntry(props: Props) {
                   <DatePicker
                     value={selectedDate}
                     onChange={(e) => {
-                      setSelectedDate(e as Date);
+                      if (e != null) setSelectedDate(e);
                       setDatePickerOpen(false);
                     }}
                     size='lg'

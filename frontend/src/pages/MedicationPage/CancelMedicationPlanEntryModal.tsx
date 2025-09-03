@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { MedicationPlanEntry } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 interface Props {
   opened: boolean;
@@ -31,22 +32,18 @@ function CancelMedicationPlanEntryModal(props: Props) {
     checkLocaleLoaded();
   }, [t]);
 
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [stoppedReason, setStoppedReason] = useState<string>('');
 
   function cancelMedicationPlanEntry() {
     const medicationPlanEntryToUpdate = props.medicationPlanEntryToCancel;
 
-    const offsetEnd = endDate.getTimezoneOffset();
-    const endDateDate = new Date(endDate.getTime() - offsetEnd * 60 * 1000);
-    const endDateString: string = endDateDate.toISOString().split('T')[0];
-
-    medicationPlanEntryToUpdate.endDate = endDateString;
+    medicationPlanEntryToUpdate.endDate = endDate;
     medicationPlanEntryToUpdate.stoppedReason = stoppedReason;
 
     axiosInstance
       .put(`/MedicationPlanEntries/${props.medicationPlanEntryToCancel.id}`, {
-        endDate: endDateString,
+        endDate: endDate,
         notes: medicationPlanEntryToUpdate.notes,
         stoppedReason: stoppedReason,
       })

@@ -1,12 +1,13 @@
 import { Group, ActionIcon, Button, Popover } from '@mantine/core';
 import { MonthPicker } from '@mantine/dates';
+import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
 
 interface Props {
-  selectedMonth: Date;
-  onSelectedMonthChange: (newDate: Date) => void;
+  selectedMonth: string;
+  onSelectedMonthChange: (newDate: string) => void;
 }
 
 function MonthPickerComponent(props: Props) {
@@ -40,22 +41,19 @@ function MonthPickerComponent(props: Props) {
         variant='subtle'
         size='lg'
         onClick={() => {
-          const selectedMonthTemp = new Date(selectedMonth);
-          selectedMonthTemp.setMonth(selectedMonthTemp.getMonth() - 1);
+          const selectedMonthTemp = dayjs(selectedMonth)
+            .subtract(1, 'month')
+            .format('YYYY-MM-DD');
           setSelectedMonth(selectedMonthTemp);
         }}
       >
         <TbChevronLeft size={30} />
       </ActionIcon>
 
-      <Popover
-      >
+      <Popover>
         <Popover.Target>
           <Button variant='subtle' color='gray'>
-            {selectedMonth.toLocaleString(locale ?? 'en', {
-              month: 'long',
-            })}{' '}
-            {selectedMonth.getFullYear().toString()}
+            {dayjs(selectedMonth).format('MMMM YYYY')}
           </Button>
         </Popover.Target>
         <Popover.Dropdown>
@@ -75,8 +73,10 @@ function MonthPickerComponent(props: Props) {
         variant='subtle'
         size='lg'
         onClick={() => {
-          const selectedMonthTemp = new Date(selectedMonth);
-          selectedMonthTemp.setMonth(selectedMonthTemp.getMonth() + 1);
+          // TODO: Set locale with dayjs globally
+          const selectedMonthTemp = dayjs(selectedMonth)
+            .add(1, 'month')
+            .format('YYYY-MM-DD');
           setSelectedMonth(selectedMonthTemp);
         }}
       >

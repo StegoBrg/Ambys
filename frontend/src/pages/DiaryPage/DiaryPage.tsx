@@ -26,10 +26,11 @@ import { TbFilter } from 'react-icons/tb';
 import { TbFilterFilled } from 'react-icons/tb';
 import MonthPickerComponent from './MonthPickerComponent';
 import WeekPicker from './WeekPicker';
-import { addDays, endOfWeek, startOfWeek } from './WeekPickerUtils';
+import { endOfWeek, startOfWeek } from './WeekPickerUtils';
 import DiaryPageFilterModal from './DiaryPageFilterModal';
 import { useLocalStorage } from '@mantine/hooks';
 import axiosInstance from '../../lib/axiosInstance';
+import dayjs from 'dayjs';
 
 type ViewModes = 'all' | 'week' | 'month';
 
@@ -47,9 +48,13 @@ function DiaryPage() {
 
   const [viewMode, setViewMode] = useState<ViewModes>('week');
   // View Mode Month
-  const [selectedMonth, setSelectedMonth] = useState(new Date());
+  const [selectedMonth, setSelectedMonth] = useState<string>(
+    dayjs().format('YYYY-MM-DD')
+  );
   // View Mode Week
-  const [selectedWeek, setSelectedWeek] = useState(new Date());
+  const [selectedWeek, setSelectedWeek] = useState<string>(
+    dayjs().format('YYYY-MM-DD')
+  );
 
   const [filterModalOpen, setFilterModalOpen] = useState(false);
   const [isFilterApplied, setIsFilterApplied] = useState(false);
@@ -71,41 +76,20 @@ function DiaryPage() {
       let startDate = startOfWeek(selectedWeek);
       let endDate = endOfWeek(selectedWeek);
 
-      // Deal with time zone issues.
-      const offsetStart = startDate.getTimezoneOffset();
-      startDate = new Date(startDate.getTime() - offsetStart * 60 * 1000);
-
-      const offsetEnd = endDate.getTimezoneOffset();
-      endDate = new Date(endDate.getTime() - offsetEnd * 60 * 1000);
-
       apiUrlDailyNote =
-        apiUrlDailyNote +
-        `?startDate=${
-          new Date(addDays(startDate, 1)).toISOString().split('T')[0]
-        }&endDate=${endDate.toISOString().split('T')[0]}`;
+        apiUrlDailyNote + `?startDate=${startDate}&endDate=${endDate}`;
     }
 
     if (viewMode === 'month') {
-      const startDate = new Date(
-        selectedMonth.getFullYear(),
-        selectedMonth.getMonth(),
-        1
-      );
-      let endDate = new Date(
-        selectedMonth.getFullYear(),
-        selectedMonth.getMonth() + 1,
-        0
-      );
-
-      // Deal with time zone issues.
-      const offsetEnd = endDate.getTimezoneOffset();
-      endDate = new Date(endDate.getTime() - offsetEnd * 60 * 1000);
+      const startDate: string = dayjs(selectedMonth)
+        .startOf('month')
+        .format('YYYY-MM-DD');
+      const endDate: string = dayjs(selectedMonth)
+        .endOf('month')
+        .format('YYYY-MM-DD');
 
       apiUrlDailyNote =
-        apiUrlDailyNote +
-        `?startDate=${
-          new Date(addDays(startDate, 1)).toISOString().split('T')[0]
-        }&endDate=${endDate.toISOString().split('T')[0]}`;
+        apiUrlDailyNote + `?startDate=${startDate}&endDate=${endDate}`;
     }
 
     axiosInstance

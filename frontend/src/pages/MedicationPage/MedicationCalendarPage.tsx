@@ -3,8 +3,9 @@ import WeekPicker from '../DiaryPage/WeekPicker';
 import { Center, em, Paper, SimpleGrid, Stack, Text } from '@mantine/core';
 import MedicationCalendarDay from './MedicationCalendarDay';
 import { useMediaQuery } from '@mantine/hooks';
-import { startOfWeek } from '../DiaryPage/WeekPickerUtils';
+import { addDays, startOfWeek } from '../DiaryPage/WeekPickerUtils';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 const weekDayKeys = [
   'monday',
@@ -20,7 +21,9 @@ function MedicationCalendarPage() {
   const { t } = useTranslation();
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
 
-  const [selectedWeek, setSelectedWeek] = useState(new Date());
+  const [selectedWeek, setSelectedWeek] = useState<string>(
+    dayjs().format('YYYY-MM-DD')
+  );
   const [dates, setDates] = useState<Date[]>([]);
   const [locale, setLocale] = useState('en');
 
@@ -41,23 +44,13 @@ function MedicationCalendarPage() {
   useEffect(() => {
     let startDate = startOfWeek(selectedWeek);
 
-    // Deal with time zone issues.
-    const offsetStart = startDate.getTimezoneOffset();
-    startDate = new Date(startDate.getTime() - offsetStart * 60 * 1000);
-
     const allDatesForWeek = [];
-    for (let i = 1; i <= 7; i++) {
+    for (let i = 0; i < 7; i++) {
       allDatesForWeek.push(addDays(startDate, i));
     }
 
     setDates(allDatesForWeek);
   }, [selectedWeek]);
-
-  function addDays(date: Date, days: number) {
-    const result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-  }
 
   return (
     <>

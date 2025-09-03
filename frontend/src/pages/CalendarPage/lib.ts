@@ -4,11 +4,11 @@ import { ColorCodeConfiguration, DailyNote } from '../../Types';
 
 // Returns undefined if no filter could be found for the given date.
 function getColorCodingForDate(
-  date: Date,
+  dateString: string,
   colorCodeConfig: ColorCodeConfiguration | undefined,
   dailyNotes: DailyNote[]
 ): string | undefined {
-  const dailyNote = getDailyNoteForDate(date, dailyNotes);
+  const dailyNote = getDailyNoteForDate(dateString, dailyNotes);
 
   const config = colorCodeConfig;
 
@@ -88,13 +88,8 @@ function getColorCodingForDate(
   return undefined;
 }
 
-function getDailyNoteForDate(date: Date, dailyNotes: DailyNote[]) {
-  const offset = date.getTimezoneOffset();
-  date = new Date(date.getTime() - offset * 60 * 1000);
-
-  const formattedDate = date.toISOString().split('T')[0];
-
-  const dailyNote = dailyNotes.find((x) => x.date === formattedDate);
+function getDailyNoteForDate(dateString: string, dailyNotes: DailyNote[]) {
+  const dailyNote = dailyNotes.find((x) => x.date === dateString);
 
   return dailyNote;
 }

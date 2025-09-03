@@ -27,7 +27,7 @@ import {
   getAttributeShowAllWithFilter,
   getAttributeSum,
 } from './VisualizationFunctions';
-import { HealthReport, HealthReportStringDates } from './Types';
+import { HealthReport } from './Types';
 import { Calendar } from '@mantine/dates';
 import { getColorCodingForDate } from '../CalendarPage/lib';
 import { getFirstDaysOfMonths } from './CalendarFunctions';
@@ -45,6 +45,7 @@ import DeleteConfirmationModal from './DeleteConfirmationModal';
 import { useMediaQuery } from '@mantine/hooks';
 import ReportHeader from './ReportHeader';
 import { useReactToPrint } from 'react-to-print';
+import dayjs from 'dayjs';
 
 interface Props {
   healthReport: HealthReport;
@@ -72,8 +73,8 @@ function ReportViewer(props: Props) {
 
     checkLocaleLoaded();
   }, [t]);
-  const [startDate] = useState<Date>(props.healthReport.startDate);
-  const [endDate] = useState<Date>(props.healthReport.endDate);
+  const [startDate] = useState<string>(props.healthReport.startDate);
+  const [endDate] = useState<string>(props.healthReport.endDate);
 
   const [dailyNotes, setDailyNotes] = useState<DailyNote[]>([]);
 
@@ -86,11 +87,7 @@ function ReportViewer(props: Props) {
 
   useEffect(() => {
     axiosInstance
-      .get<DailyNote[]>(
-        `dailynotes?startDate=${
-          startDate.toISOString().split('T')[0]
-        }&endDate=${endDate.toISOString().split('T')[0]}`
-      )
+      .get<DailyNote[]>(`dailynotes?startDate=${startDate}&endDate=${endDate}`)
       .then((response) => {
         setDailyNotes(response.data);
       });
@@ -99,13 +96,17 @@ function ReportViewer(props: Props) {
   const lowerFirstChar = (str: string) =>
     str.charAt(0).toLowerCase() + str.slice(1);
 
+  // Sort by dates
   useEffect(() => {
     if (props.healthReport.includeMedicationList) {
       axiosInstance.get('/MedicationPlanEntries').then((response) => {
         const planEntries: MedicationPlanEntry[] = response.data.filter(
           (entry: MedicationPlanEntry) => {
-            const entryDate = new Date(entry.startDate);
-            return entryDate >= startDate && entryDate <= endDate;
+            const d = dayjs(entry.startDate);
+            return (
+              (d.isAfter(startDate, 'day') || d.isSame(startDate, 'day')) &&
+              (d.isBefore(endDate, 'day') || d.isSame(endDate, 'day'))
+            );
           }
         );
 
@@ -176,16 +177,12 @@ function ReportViewer(props: Props) {
                     color='green'
                     mr={10}
                     onClick={() => {
-                      const healthReportStringDates: HealthReportStringDates = {
+                      const healthReportStringDates: HealthReport = {
                         id: props.healthReport.id,
                         name: props.healthReport.name,
                         folder: props.healthReport.folder,
-                        startDate: props.healthReport.startDate
-                          .toISOString()
-                          .split('T')[0],
-                        endDate: props.healthReport.endDate
-                          .toISOString()
-                          .split('T')[0],
+                        startDate: props.healthReport.startDate,
+                        endDate: props.healthReport.endDate,
                         attributesVisualizations:
                           props.healthReport.attributesVisualizations,
                         colorCodeConfig: props.healthReport.colorCodeConfig,
@@ -217,8 +214,8 @@ function ReportViewer(props: Props) {
           <ReportHeader
             name={props.healthReport.name}
             dailyNoteCount={dailyNotes.length}
-            startDate={props.healthReport.startDate.toLocaleDateString(locale)}
-            endDate={props.healthReport.endDate.toLocaleDateString(locale)}
+            startDate={props.healthReport.startDate}
+            endDate={props.healthReport.endDate}
           />
 
           {props.healthReport.attributesVisualizations.map((av, index) => {
@@ -461,7 +458,7 @@ function ReportViewer(props: Props) {
                           static
                           weekendDays={[]} // Removes weekend highlight which may conflict with color coding.
                           renderDay={(date) => {
-                            const day = date.getDate();
+                            const day = new Date(date).getDate();
 
                             return (
                               <Box

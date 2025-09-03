@@ -15,6 +15,7 @@ import { useEffect, useState } from 'react';
 import { Medication } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 
 interface Props {
   opened: boolean;
@@ -42,8 +43,10 @@ function AddMedicationPlanEntryModal(props: Props) {
     checkLocaleLoaded();
   }, [t]);
 
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<string>(
+    dayjs().format('YYYY-MM-DD')
+  );
+  const [endDate, setEndDate] = useState<string | null>(null);
   const [medication, setMedication] = useState<Medication | null>(null);
   const [dosage, setDosage] = useState<string>('');
   const [isAsNeeded, setIsAsNeeded] = useState<boolean>(false);
@@ -62,26 +65,12 @@ function AddMedicationPlanEntryModal(props: Props) {
       return;
     }
 
-    // Deal with time zone issues.
-    const offsetStart = startDate.getTimezoneOffset();
-    const startDateDate = new Date(
-      startDate.getTime() - offsetStart * 60 * 1000
-    );
-    const startDateString: string = startDateDate.toISOString().split('T')[0];
-
-    let endDateString: string | null = null;
-    if (endDate) {
-      const offsetEnd = endDate.getTimezoneOffset();
-      const endDateDate = new Date(endDate.getTime() - offsetEnd * 60 * 1000);
-      endDateString = endDateDate.toISOString().split('T')[0];
-    }
-
     axiosInstance
       .post('/MedicationPlanEntries', {
         medicationId: medication.id,
         dosage: dosage,
-        startDate: startDateString,
-        endDate: endDateString,
+        startDate: startDate,
+        endDate: endDate,
         isAsNeeded: isAsNeeded,
         schedule: isAsNeeded
           ? null
@@ -98,7 +87,7 @@ function AddMedicationPlanEntryModal(props: Props) {
       .then(() => {
         props.onSave();
         // Reset all fields
-        setStartDate(new Date());
+        setStartDate(dayjs().format('YYYY-MM-DD'));
         setEndDate(null);
         setMedication(null);
         setDosage('');

@@ -30,6 +30,7 @@ import { TbEdit, TbFilter, TbX } from 'react-icons/tb';
 import { useMediaQuery } from '@mantine/hooks';
 import DiaryPageFilterModal from '../DiaryPage/DiaryPageFilterModal';
 import ColorCodeModal from '../CalendarPage/ColorCodeModal';
+import dayjs from 'dayjs';
 
 interface Props {
   opened: boolean;
@@ -74,8 +75,12 @@ function GenerateReportModal(props: Props) {
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
 
-  const [startDate, setStartDate] = useState<Date>(oneMonthAgo);
-  const [endDate, setEndDate] = useState<Date>(new Date());
+  const [startDate, setStartDate] = useState<string>(
+    dayjs(dayjs().format('YYYY-MM-DD'))
+      .subtract(1, 'month')
+      .format('YYYY-MM-DD')
+  );
+  const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
 
   const [allAttributes, setAllAttributes] = useState<NoteAttribute[]>([]);
   const [allAttributeNames, setAllAttributeNames] = useState<string[]>([]);

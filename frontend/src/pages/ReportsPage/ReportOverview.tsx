@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { HealthReport, HealthReportStringDates } from './Types';
+import { HealthReport } from './Types';
 import axiosInstance from '../../lib/axiosInstance';
 import {
   Card,
@@ -18,7 +18,7 @@ interface Props {
 
 interface FolderNode {
   folders: Record<string, FolderNode>;
-  reports: HealthReportStringDates[];
+  reports: HealthReport[];
 }
 
 interface FolderViewProps {
@@ -52,8 +52,8 @@ function FolderView(props: FolderViewProps) {
                         id: reportConfig.id,
                         name: reportConfig.name,
                         folder: reportConfig.folder,
-                        startDate: new Date(reportConfig.startDate),
-                        endDate: new Date(reportConfig.endDate),
+                        startDate: reportConfig.startDate,
+                        endDate: reportConfig.endDate,
                         attributesVisualizations:
                           reportConfig.attributesVisualizations,
                         colorCodeConfig: reportConfig.colorCodeConfig,
@@ -88,13 +88,11 @@ function FolderView(props: FolderViewProps) {
 }
 
 function ReportOverview(props: Props) {
-  const [allReportConfigs, setAllReportsConfigs] = useState<
-    HealthReportStringDates[]
-  >([]);
+  const [allReportConfigs, setAllReportsConfigs] = useState<HealthReport[]>([]);
 
   useEffect(() => {
     axiosInstance
-      .get<HealthReportStringDates[]>('HealthReportConfigs')
+      .get<HealthReport[]>('HealthReportConfigs')
       .then((response) => {
         setAllReportsConfigs(response.data);
       });

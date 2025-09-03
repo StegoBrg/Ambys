@@ -46,9 +46,7 @@ function CalendarPage() {
   const [dailyNoteDetail, setDailyNoteDetail] = useState<
     DailyNote | undefined
   >();
-  const [dailyNoteDetailDate, setDailyNoteDetailDate] = useState<Date>(
-    new Date()
-  );
+  const [dailyNoteDetailDate, setDailyNoteDetailDate] = useState<string>('');
 
   const [colorCodeModalOpened, setColorCodeModalOpened] = useState(false);
 
@@ -133,7 +131,7 @@ function CalendarPage() {
               })}
               weekendDays={[]} // Removes weekend highlight which may conflict with color coding.
               renderDay={(date) => {
-                const day = date.getDate();
+                const day = new Date(date).getDate();
 
                 return (
                   <Box
