@@ -43,6 +43,8 @@ import { TbAsterisk } from 'react-icons/tb';
 import _ from 'lodash';
 import axiosInstance from '../../lib/axiosInstance';
 import { IoAdd } from 'react-icons/io5';
+import i18n from '../../i18n';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 type State = 'create' | 'edit' | 'show';
 
@@ -69,6 +71,8 @@ function DiaryEntry(props: Props) {
   const theme = useMantineTheme();
   const isDarkTheme = useMantineColorScheme().colorScheme === 'dark';
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+  const locale = i18n.language;
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [state, setState] = useState<State>(props.state);
 
@@ -392,9 +396,7 @@ function DiaryEntry(props: Props) {
                       padding: '0.5rem',
                     }}
                   >
-                    {dayjs(selectedDate).format(
-                      t('diaryPage.diaryEntry.dates.format')
-                    )}
+                    {dayjs(selectedDate).format(dateFormat)}
                   </Box>
                 </Popover.Target>
                 <Popover.Dropdown ref={popoverRef}>
@@ -405,7 +407,7 @@ function DiaryEntry(props: Props) {
                       setDatePickerOpen(false);
                     }}
                     size='lg'
-                    locale={t('diaryPage.diaryEntry.dates.dayjsLocale')}
+                    locale={locale}
                     highlightToday
                   />
                 </Popover.Dropdown>

@@ -11,28 +11,15 @@ import AddMedicationPlanEntryModal from './AddMedicationPlanEntryModal';
 import CancelMedicationPlanEntryModal from './CancelMedicationPlanEntryModal';
 import EditMedicationPlanEntryModal from './EditMedicationPlanEntryModal';
 import DeleteMedicationPlanEntryModal from './DeleteMedicationPlanEntryModal';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
+import dayjs from 'dayjs';
 
 function MedicationPlanPage() {
   const { showContextMenu } = useContextMenu();
   const { t } = useTranslation();
-
-  const [locale, setLocale] = useState('en');
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [detailModalOpen, setDetailModalOpen] = useState(false);
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
 
   const [medications, setMedications] = useState<Medication[]>([]);
 
@@ -123,7 +110,7 @@ function MedicationPlanPage() {
                   accessor: 'startDate',
                   title: t('medicationsPage.medicationPlan.startDate'),
                   render: (value) => {
-                    return new Date(value.startDate).toLocaleDateString(locale);
+                    return dayjs(value.startDate).format(dateFormat);
                   },
                 },
                 {
@@ -131,7 +118,7 @@ function MedicationPlanPage() {
                   title: t('medicationsPage.medicationPlan.endDate'),
                   render: (value) => {
                     if (value.endDate) {
-                      return new Date(value.endDate).toLocaleDateString(locale);
+                      return dayjs(value.endDate).format(dateFormat);
                     }
                   },
                 },
@@ -288,7 +275,7 @@ function MedicationPlanPage() {
                   accessor: 'startDate',
                   title: t('medicationsPage.medicationPlan.startDate'),
                   render: (value) => {
-                    return new Date(value.startDate).toLocaleDateString(locale);
+                    return dayjs(value.startDate).format(dateFormat);
                   },
                 },
                 {
@@ -296,7 +283,7 @@ function MedicationPlanPage() {
                   title: t('medicationsPage.medicationPlan.endDate'),
                   render: (value) => {
                     if (value.endDate) {
-                      return new Date(value.endDate).toLocaleDateString(locale);
+                      return dayjs(value.endDate).format(dateFormat);
                     }
                   },
                 },

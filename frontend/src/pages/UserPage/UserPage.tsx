@@ -27,10 +27,13 @@ import { notifications } from '@mantine/notifications';
 import ChangePasswordModal from './ChangePasswordModal';
 import AddAccessToken from './AddAccessToken';
 import { useTranslation } from 'react-i18next';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
+import dayjs from 'dayjs';
 
 function UserPage() {
   const { t } = useTranslation();
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [userData, setUserData] = useState<UserData>({
     id: '',
@@ -47,22 +50,6 @@ function UserPage() {
 
   const [pwChangeModalOpened, setPwChangeModalOpened] = useState(false);
   const [accessTokenModalOpened, setAccessTokenModalOpened] = useState(false);
-
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
 
   useEffect(() => {
     axiosInstance.get('Users/self').then((response) => {
@@ -233,7 +220,7 @@ function UserPage() {
                   <Text size='lg'>{token.name}</Text>
                   <Text c='dimmed'>
                     {t('userPage.tokenCreatedAt')}{' '}
-                    {new Date(token.createdAt).toLocaleDateString(locale)}
+                    {dayjs(token.createdAt).format(dateFormat)}
                   </Text>
                 </Stack>
 

@@ -1,10 +1,11 @@
 import { Modal, Stack, Group, Button, Textarea, Alert } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MedicationPlanEntry } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   opened: boolean;
@@ -16,21 +17,7 @@ interface Props {
 
 function CancelMedicationPlanEntryModal(props: Props) {
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [endDate, setEndDate] = useState<string>(dayjs().format('YYYY-MM-DD'));
   const [stoppedReason, setStoppedReason] = useState<string>('');
@@ -67,7 +54,7 @@ function CancelMedicationPlanEntryModal(props: Props) {
           label={t('medicationsPage.medicationPlan.endDate')}
           withAsterisk
           value={endDate}
-          locale={locale}
+          valueFormat={dateFormat}
           onChange={(e) => {
             if (e) {
               setEndDate(e);

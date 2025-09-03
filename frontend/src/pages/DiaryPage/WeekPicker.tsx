@@ -5,6 +5,7 @@ import { Calendar } from '@mantine/dates';
 import { Group, ActionIcon, Popover, Button } from '@mantine/core';
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb';
 import { startOfWeek, endOfWeek, isInWeekRange } from './WeekPickerUtils';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   selectedWeek: string;
@@ -12,10 +13,10 @@ interface Props {
 }
 
 function WeekPicker(props: Props) {
+  const dateFormat = useUserSettings((state) => state.dateFormat);
+
   const [hovered, setHovered] = useState<string | null>(null);
   const [selectedWeek, setSelectedWeek] = useState<string>(props.selectedWeek);
-
-  const browserLocale = navigator.language;
 
   return (
     <>
@@ -38,20 +39,8 @@ function WeekPicker(props: Props) {
         <Popover>
           <Popover.Target>
             <Button variant='subtle' color='gray'>
-              {new Date(startOfWeek(selectedWeek)).toLocaleString(
-                browserLocale,
-                {
-                  year: '2-digit',
-                  month: '2-digit',
-                  day: '2-digit',
-                }
-              )}{' '}
-              -{' '}
-              {new Date(endOfWeek(selectedWeek)).toLocaleString(browserLocale, {
-                year: '2-digit',
-                month: '2-digit',
-                day: '2-digit',
-              })}
+              {dayjs(startOfWeek(selectedWeek)).format(dateFormat)} -{' '}
+              {dayjs(endOfWeek(selectedWeek)).format(dateFormat)}
             </Button>
           </Popover.Target>
           <Popover.Dropdown>

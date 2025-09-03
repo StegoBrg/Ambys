@@ -4,7 +4,7 @@ import { Medication, MedicationPlanEntry } from '../../Types';
 import { Text, Card, Stack } from '@mantine/core';
 
 interface Props {
-  date: Date;
+  date: string;
 }
 
 type MedicationWithTime = {
@@ -21,13 +21,8 @@ function MedicationCalendarDay(props: Props) {
   >([]);
 
   useEffect(() => {
-    // Deal with time zone issues.
-    const offsetStart = props.date.getTimezoneOffset();
-    const dateObj = new Date(props.date.getTime() - offsetStart * 60 * 1000);
-    const dateString: string = dateObj.toISOString().split('T')[0];
-
     axiosInstance
-      .get<MedicationPlanEntry[]>(`medicationPlanEntries/date/${dateString}`)
+      .get<MedicationPlanEntry[]>(`medicationPlanEntries/date/${props.date}`)
       .then((response) => {
         // Create a new array with an entry for each timeOfDay.
         const mediactionsWithTime: MedicationWithTime[] = [];

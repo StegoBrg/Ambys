@@ -11,11 +11,12 @@ import {
   Checkbox,
 } from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Medication } from '../../Types';
 import axiosInstance from '../../lib/axiosInstance';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   opened: boolean;
@@ -27,21 +28,7 @@ interface Props {
 
 function AddMedicationPlanEntryModal(props: Props) {
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [startDate, setStartDate] = useState<string>(
     dayjs().format('YYYY-MM-DD')
@@ -115,7 +102,7 @@ function AddMedicationPlanEntryModal(props: Props) {
             withAsterisk
             highlightToday
             value={startDate}
-            locale={locale}
+            valueFormat={dateFormat}
             onChange={(e) => {
               if (e) setStartDate(e);
             }}
@@ -125,7 +112,7 @@ function AddMedicationPlanEntryModal(props: Props) {
             placeholder={''}
             highlightToday
             value={endDate}
-            locale={locale}
+            valueFormat={dateFormat}
             onChange={(e) => {
               if (e) setEndDate(e);
             }}

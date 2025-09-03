@@ -31,6 +31,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import DiaryPageFilterModal from '../DiaryPage/DiaryPageFilterModal';
 import ColorCodeModal from '../CalendarPage/ColorCodeModal';
 import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   opened: boolean;
@@ -41,34 +42,11 @@ interface Props {
 function GenerateReportModal(props: Props) {
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
-
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
   const [reportName, setReportName] = useState<string>(
-    `${t('reportsPage.addModal.healthReport')} - ` +
-      new Date().toLocaleDateString(locale)
+    `${t('reportsPage.addModal.healthReport')} - ` + dayjs().format(dateFormat)
   );
-
-  useEffect(() => {
-    // Update the report name when the locale changes
-    setReportName(
-      `${t('reportsPage.addModal.healthReport')} - ` +
-        new Date().toLocaleDateString(locale)
-    );
-  }, [locale]);
 
   const [folder, setFolder] = useState<string>('');
 
@@ -175,7 +153,7 @@ function GenerateReportModal(props: Props) {
           label={t('reportsPage.addModal.startDate')}
           withAsterisk
           value={startDate}
-          locale={locale}
+          valueFormat={dateFormat}
           onChange={(e) => {
             if (e) {
               setStartDate(e);
@@ -187,7 +165,7 @@ function GenerateReportModal(props: Props) {
           label={t('reportsPage.addModal.endDate')}
           withAsterisk
           value={endDate}
-          locale={locale}
+          valueFormat={dateFormat}
           onChange={(e) => {
             if (e) {
               setEndDate(e);

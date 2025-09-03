@@ -11,6 +11,8 @@ import {
   NavLink,
 } from '@mantine/core';
 import { TbFolder } from 'react-icons/tb';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
+import dayjs from 'dayjs';
 
 interface Props {
   onClick: (report: HealthReport) => void;
@@ -27,6 +29,8 @@ interface FolderViewProps {
 }
 
 function FolderView(props: FolderViewProps) {
+  const dateFormat = useUserSettings((state) => state.dateFormat);
+
   return (
     <>
       <Stack w='100%' maw={600} gap={'xs'}>
@@ -69,8 +73,8 @@ function FolderView(props: FolderViewProps) {
                     <Group>
                       <Text fw={500}>{reportConfig.name}</Text>
                       <Text size='sm' c='dimmed'>
-                        {new Date(reportConfig.startDate).toLocaleDateString()}{' '}
-                        ➤ {new Date(reportConfig.endDate).toLocaleDateString()}
+                        {dayjs(reportConfig.startDate).format(dateFormat)} ➤{' '}
+                        {dayjs(reportConfig.endDate).format(dateFormat)}
                       </Text>
                     </Group>
                   </Card>

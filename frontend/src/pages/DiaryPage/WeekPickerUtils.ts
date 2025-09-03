@@ -1,11 +1,5 @@
 import dayjs from 'dayjs';
 
-function addDays(date: string, days: number) {
-  const result = new Date(date);
-  result.setDate(result.getDate() + days);
-  return result;
-}
-
 function getDay(date: string) {
   const day = dayjs(date).day();
   return day === 0 ? 6 : day - 1;
@@ -34,4 +28,4 @@ function isInWeekRange(date: string, value: string | null) {
   return (d.isSame(start) || d.isAfter(start)) && (d.isSame(end) || d.isBefore(end));
 }
 
-export { getDay, startOfWeek, endOfWeek, isInWeekRange, addDays };
+export { getDay, startOfWeek, endOfWeek, isInWeekRange };

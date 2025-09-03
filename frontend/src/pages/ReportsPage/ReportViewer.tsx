@@ -46,6 +46,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import ReportHeader from './ReportHeader';
 import { useReactToPrint } from 'react-to-print';
 import dayjs from 'dayjs';
+import { useUserSettings } from '../../stores/useUserSettingsStore';
 
 interface Props {
   healthReport: HealthReport;
@@ -57,22 +58,9 @@ interface Props {
 
 function ReportViewer(props: Props) {
   const { t } = useTranslation();
-  const [locale, setLocale] = useState('en');
   const isMobile = useMediaQuery(`(max-width: ${em(750)})`);
+  const dateFormat = useUserSettings((state) => state.dateFormat);
 
-  // Update locale if string is loaded from i18next.
-  useEffect(() => {
-    const checkLocaleLoaded = () => {
-      const loadedLocale = t('diaryPage.diaryEntry.dates.dayjsLocale');
-      if (loadedLocale !== 'diaryPage.diaryEntry.dates.dayjsLocale') {
-        setLocale(loadedLocale);
-      } else {
-        setLocale('en');
-      }
-    };
-
-    checkLocaleLoaded();
-  }, [t]);
   const [startDate] = useState<string>(props.healthReport.startDate);
   const [endDate] = useState<string>(props.healthReport.endDate);
 
@@ -501,7 +489,7 @@ function ReportViewer(props: Props) {
                   accessor: 'startDate',
                   title: t('medicationsPage.medicationPlan.startDate'),
                   render: (value) => {
-                    return new Date(value.startDate).toLocaleDateString(locale);
+                    return dayjs(value.startDate).format(dateFormat);
                   },
                 },
                 {
@@ -509,7 +497,7 @@ function ReportViewer(props: Props) {
                   title: t('medicationsPage.medicationPlan.endDate'),
                   render: (value) => {
                     if (value.endDate) {
-                      return new Date(value.endDate).toLocaleDateString(locale);
+                      return dayjs(value.endDate).format(dateFormat);
                     }
                   },
                 },
