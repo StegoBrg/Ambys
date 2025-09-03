@@ -48,7 +48,7 @@ function GenerateReportModal(props: Props) {
     `${t('reportsPage.addModal.healthReport')} - ` + dayjs().format(dateFormat)
   );
 
-  const [folder, setFolder] = useState<string>('');
+  const [folder, setFolder] = useState<string>('Default');
 
   const oneMonthAgo = new Date();
   oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
